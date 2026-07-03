@@ -1,0 +1,3 @@
+[submodule "teste"]
+	path = teste
+	url = https://github.com/matheusbrodriguesati-coder/teste.git
