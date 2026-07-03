@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Documento Confidencial - GDA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --pe-blue: #00266b;
+            --pe-red: #cc071e;
+            --pe-yellow: #ffd73a;
+            --pe-sand: #f9f2d4;
+            --pe-dark: #071531;
+        }
+
+        * {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body.body-theme {
+            background: #00266b;
+            color: var(--pe-dark);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--pe-yellow) 0%, var(--pe-red) 55%, var(--pe-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass-card {
+            background: rgba(255, 250, 235, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 38, 107, 0.12);
+        }
+
+        .nav-blur {
+            background: rgba(30, 58, 138, 0.95);
+            backdrop-filter: blur(20px);
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--pe-yellow), var(--pe-red));
+            z-index: 100;
+            transition: width 0.1s;
+        }
+
+        .hero-glow-1 {
+            background: rgba(30, 58, 138, 0.22);
+        }
+
+        .hero-glow-2 {
+            background: rgba(30, 58, 138, 0.18);
+        }
+
+        .hero-glow-3 {
+            background: rgba(30, 58, 138, 0.25);
+        }
+
+        .hero-sticker {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(59, 130, 246, 0.22);
+            color: #fff;
+        }
+
+        .hero-sticker span {
+            background: var(--pe-yellow);
+            color: var(--pe-dark);
+        }
+
+        .bg-blue-600 {
+            background-color: #00266b !important;
+        }
+
+        .bg-cyan-600 {
+            background-color: #00266b !important;
+        }
+
+        .bg-indigo-600 {
+            background-color: #00266b !important;
+        }
+
+        .bg-emerald-600 {
+            background-color: #00266b !important;
+        }
+
+        .bg-blue-100 {
+            background-color: rgba(59,130,246,0.16) !important;
+        }
+
+        .bg-indigo-100 {
+            background-color: #00266b !important;
+        }
+
+        .text-blue-300,
+        .text-blue-200,
+        .text-cyan-400,
+        .text-indigo-500,
+        .text-indigo-600,
+        .text-slate-300 {
+            color: gray !important;
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(0, 38, 107, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--pe-blue);
+            background: rgba(0, 38, 107, 0.05);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--pe-yellow);
+            background: rgba(255, 215, 58, 0.1);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden body-theme">
+    <div class="scroll-indicator" id="scrollBar"></div>
+
+    <nav class="fixed w-full z-50 bg-white border-b border-white/10 transition-all duration-300 overflow-visible">
+    <img src="imagempng.png" alt="ATI Central de Serviços" class="absolute left-4 top-1/2 -translate-y-1/2 h-16 w-auto object-contain"/>
+    <img src="ati-central-servicos.png" alt="ATI Central de Serviços" class="absolute right-4 top-1/2 -translate-y-1/2 h-16 w-auto object-contain"/>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+            <div class="flex items-center gap-3">
+    <div class="hidden md:block">
+        <div class="text-black font-bold text-lg leading-tight">GDA</div>
+        <div class="text-blue-600 text-xs">ATI-PE</div>
+    </div>
+</div>
+            <div class="flex items-center gap-4">
+                <button onclick="window.location.href='sitegda-confidencial.html'" class="bg-gradient-to-r from-blue-600 to-blue-400 text-white-100 px-6 py-2.5 rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-blue-500/30 transition-all transform hover:scale-105">
+                    Página Inicial
+                </button>
+                <button onclick="logoutAtiInternal()" class="bg-gradient-to-r from-blue-600 to-blue-400 text-white-100 px-6 py-2.5 rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-blue-500/30 transition-all transform hover:scale-105">
+                    Sair
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <main class="pt-32 min-h-screen">
+        <section class="relative py-20 text-white overflow-hidden">
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=60 height=60 viewBox=0 0 60 60 xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.03\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+            <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full hero-sticker border border-white/20 text-white text-sm mb-8 backdrop-blur-sm">
+                    Adicionar Documento Confidencial
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">Adicionar Documento</h1>
+                <p class="text-lg text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+                    Faça upload de um novo documento confidencial. O arquivo será armazenado e ficará disponível para download na página de armazenamento.
+                </p>
+            </div>
+        </section>
+
+        <section class="py-20 bg-blue-50">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white rounded-3xl p-10 shadow-2xl border border-slate-200">
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="mb-6">
+                            <label for="docTitle" class="block text-slate-900 font-semibold mb-2">Título do Documento</label>
+                            <input type="text" id="docTitle" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Digite o título..." required>
+                        </div>
+                        <div class="mb-6">
+                            <label for="docDesc" class="block text-slate-900 font-semibold mb-2">Descrição</label>
+                            <textarea id="docDesc" rows="4" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Digite a descrição..." required></textarea>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-slate-900 font-semibold mb-2">Arquivo do Documento</label>
+                            <div class="upload-area" id="uploadArea">
+                                <i data-lucide="upload" class="w-12 h-12 text-blue-600 mx-auto mb-4"></i>
+                                <p class="text-slate-600">Arraste e solte o arquivo aqui ou clique para selecionar</p>
+                                <p class="text-slate-500 text-sm">Limite máximo recomendado: 15MB</p>
+                                <input type="file" id="fileInput" class="hidden" accept=".pdf,.doc,.docx,.txt" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition-all">Adicionar Documento</button>
+                    </form>
+                    <div id="successMessage" class="mt-6 hidden">
+                        <h3 class="text-xl font-bold text-green-600 mb-4">Documento Adicionado com Sucesso!</h3>
+                        <p class="text-slate-600">O documento foi armazenado. Você pode acessá-lo na página de armazenamento.</p>
+                        <a href="sitegda-storage.html" class="inline-block mt-4 bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition-all">Ir para Armazenamento</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-10 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm">© 2026 GDA - ATI-PE. Área de documentos confidenciais.</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollBar').style.width = scrolled + "%";
+        });
+
+        function logoutAtiInternal() {
+            sessionStorage.removeItem('atiAccess');
+            window.location.href = 'sitegdaatudirec.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const isAuthenticated = sessionStorage.getItem('atiAccess') === 'granted';
+            if (!isAuthenticated) {
+                window.location.href = 'sitegdaatudirec.html';
+            }
+
+            // Initialize IndexedDB
+            let db;
+            const request = indexedDB.open('GDA_Documents', 1);
+            
+            request.onerror = function(event) {
+                console.error('IndexedDB error:', event.target.error);
+            };
+            
+            request.onsuccess = function(event) {
+                db = event.target.result;
+                console.log('IndexedDB initialized');
+            };
+            
+            request.onupgradeneeded = function(event) {
+                db = event.target.result;
+                if (!db.objectStoreNames.contains('documents')) {
+                    db.createObjectStore('documents', { keyPath: 'id' });
+                }
+            };
+
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const uploadForm = document.getElementById('uploadForm');
+            const successMessage = document.getElementById('successMessage');
+
+            uploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    updateUploadArea(files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    updateUploadArea(e.target.files[0]);
+                }
+            });
+
+            function updateUploadArea(file) {
+                uploadArea.innerHTML = `
+                    <i data-lucide="file" class="w-12 h-12 text-green-600 mx-auto mb-4"></i>
+                    <p class="text-slate-600 font-semibold">${file.name}</p>
+                    <p class="text-slate-500 text-sm">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                `;
+                lucide.createIcons();
+            }
+
+            uploadForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const title = document.getElementById('docTitle').value;
+                const desc = document.getElementById('docDesc').value;
+                const file = fileInput.files[0];
+
+                if (file && db) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const dataUrl = event.target.result;
+                        
+                        const transaction = db.transaction(['documents'], 'readwrite');
+                        const store = transaction.objectStore('documents');
+                        
+                        const documentData = {
+                            id: Date.now(),
+                            title: title,
+                            description: desc,
+                            fileName: file.name,
+                            fileSize: file.size,
+                            fileType: file.type,
+                            dataUrl: dataUrl,
+                            uploadDate: new Date().toISOString()
+                        };
+                        
+                        const request = store.add(documentData);
+                        
+                        request.onsuccess = function() {
+                            console.log('Document added to IndexedDB');
+                            // Show success message
+                            uploadForm.reset();
+                            uploadArea.innerHTML = `
+                                <i data-lucide="upload" class="w-12 h-12 text-blue-600 mx-auto mb-4"></i>
+                                <p class="text-slate-600">Arraste e solte o arquivo aqui ou clique para selecionar</p>
+                                <p class="text-slate-500 text-sm">Limite máximo recomendado: 15MB</p>
+                                <input type="file" id="fileInput" class="hidden" accept=".pdf,.doc,.docx,.txt" required>
+                            `;
+                            lucide.createIcons();
+                            successMessage.classList.remove('hidden');
+                        };
+                        
+                        request.onerror = function(event) {
+                            console.error('Error adding document:', event.target.error);
+                            alert('Erro ao salvar o documento.');
+                        };
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert('Banco de dados não inicializado. Tente novamente.');
+                }
+            });
+
+            gsap.from('.hero-sticker', { opacity: 0, y: -20, duration: 1, delay: 0.5 });
+            gsap.from('h1', { opacity: 0, y: 30, duration: 1, delay: 0.7 });
+            gsap.from('p', { opacity: 0, y: 30, duration: 1, delay: 0.9 });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDA - Documentos Confidenciais</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --pe-blue: #00266b;
+            --pe-red: #cc071e;
+            --pe-yellow: #ffd73a;
+            --pe-sand: #f9f2d4;
+            --pe-dark: #071531;
+        }
+
+        * {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body.body-theme {
+            background: #00266b;
+            color: var(--pe-dark);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--pe-yellow) 0%, var(--pe-red) 55%, var(--pe-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass-card {
+            background: rgba(255, 250, 235, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 38, 107, 0.12);
+        }
+
+        .nav-blur {
+            background: rgba(30, 58, 138, 0.95);
+            backdrop-filter: blur(20px);
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--pe-yellow), var(--pe-red));
+            z-index: 100;
+            transition: width 0.1s;
+        }
+
+        .hero-glow-1 {
+            background: rgba(30, 58, 138, 0.22);
+        }
+
+        .hero-glow-2 {
+            background: rgba(30, 58, 138, 0.18);
+        }
+
+        .hero-glow-3 {
+            background: rgba(30, 58, 138, 0.25);
+        }
+
+        .hero-sticker {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(59, 130, 246, 0.22);
+            color: #fff;
+        }
+
+        .hero-sticker span {
+            background: var(--pe-yellow);
+            color: var(--pe-dark);
+        }
+
+        .bg-blue-600 {
+            background-color: #00266b !important;
+        }
+
+        .bg-cyan-600 {
+            background-color: #00266b !important;
+        }
+
+        .bg-indigo-600 {
+            background-color: #00266b !important;
+        }
+
+        .bg-emerald-600 {
+            background-color: #00266b !important;
+        }
+
+        .bg-blue-100 {
+            background-color: rgba(59,130,246,0.16) !important;
+        }
+
+        .bg-indigo-100 {
+            background-color: #00266b !important;
+        }
+
+        .document-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .document-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 38, 107, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 38, 107, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            background: rgba(255, 250, 235, 0.95);
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid rgba(0, 38, 107, 0.12);
+            width: 80%;
+            max-width: 600px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 38, 107, 0.2);
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--pe-yellow);
+            box-shadow: 0 0 0 3px rgba(255, 215, 58, 0.2);
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden body-theme">
+    <div class="scroll-indicator" id="scrollBar"></div>
+
+    <nav class="fixed w-full z-50 bg-white border-b border-white/10 transition-all duration-300 overflow-visible">
+    <img src="imagempng.png" alt="ATI Central de Serviços" class="absolute left-4 top-1/2 -translate-y-1/2 h-16 w-auto object-contain"/>
+    <img src="ati-central-servicos.png" alt="ATI Central de Serviços" class="absolute right-4 top-1/2 -translate-y-1/2 h-16 w-auto object-contain"/>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+            <div class="flex items-center gap-3">
+    <div class="hidden md:block">
+        <div class="text-black font-bold text-lg leading-tight">GDA</div>
+        <div class="text-blue-600 text-xs">ATI-PE</div>
+    </div>
+</div>
+            <div class="flex items-center gap-4">
+                <button onclick="window.location.href='sitegda-confidencial.html'" class="bg-gradient-to-r from-blue-600 to-blue-400 text-white-100 px-6 py-2.5 rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-blue-500/30 transition-all transform hover:scale-105">
+                    Página Inicial
+                </button>
+                <button onclick="logoutAtiInternal()" class="bg-gradient-to-r from-blue-600 to-blue-400 text-white-100 px-6 py-2.5 rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-blue-500/30 transition-all transform hover:scale-105">
+                    Sair
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+    <main class="pt-32 min-h-screen">
+        <section class="relative py-20 bg-blue-150 text-white overflow-hidden">
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=60 height=60 viewBox=0 0 60 60 xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.03\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+            <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full hero-sticker border border-white/20 text-white-100 text-sm mb-8 backdrop-blur-sm animate-fade-in">
+                    Acesso Interno ATI
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">Documentos Confidenciais</h1>
+                <p class="text-lg text-slate-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+                    Esta área é reservada e só pode ser acessada após login válido. Aqui estão os documentos internos guardados para utilização exclusiva da GDA.
+                </p>
+
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <div class="bg-white/10 border border-white/10 rounded-3xl p-8 shadow-2xl text-left">
+                        <h2 class="text-xl font-semibold text-white mb-4">Políticas</h2>
+                        <ul class="space-y-3 text-slate-300 text-sm">
+                            <li>• Política de Dados do Governo</li>
+                            <li>• Processo de LGPD</li>
+                            <li>• Manual de Governança</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white/10 border border-white/10 rounded-3xl p-8 shadow-2xl text-left">
+                        <h2 class="text-xl font-semibold text-white mb-4">Relatórios</h2>
+                        <ul class="space-y-3 text-slate-300 text-sm">
+                            <li>• Relatório de Auditoria de Acesso</li>
+                            <li>• Fluxo de Autorizações</li>
+                            <li>• Controle de Usuários ATI</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white/10 border border-white/10 rounded-3xl p-8 shadow-2xl text-left">
+                        <h2 class="text-xl font-semibold text-white mb-4">Projetos Internos</h2>
+                        <ul class="space-y-3 text-slate-300 text-sm">
+                            <li>• Integração BigData PE</li>
+                            <li>• Gerenciamento PBIRS</li>
+                            <li>• Hubbi e Compartilhamento</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-20 bg-blue-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white rounded-3xl p-10 shadow-2xl border border-slate-200">
+                    <div class="flex flex-col lg:flex-row gap-8 items-start">
+                        <div class="flex-1">
+                            <h2 class="text-3xl font-bold text-slate-900 mb-4">Documentos Internos</h2>
+                            <p class="text-slate-600 mb-6">Para maior segurança, esta página guarda os principais documentos internos de forma centralizada. O acesso só permanece válido enquanto houver sessão ativa no navegador.</p>
+
+                            <div class="mb-6">
+                                <input type="text" id="searchInput" class="search-input w-full" placeholder="Buscar documentos...">
+                            </div>
+
+                            <div class="space-y-4" id="documentsList">
+                                <article onclick="window.open('https://drive.expresso.pe.gov.br/s/kAEFWlrdShuJ0nl#pdfviewer', '_blank')"class="document-card border border-slate-200 rounded-3xl p-6 bg-slate-100 cursor-pointe">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <i data-lucide="file-text" class="w-6 h-6 text-blue-600"></i>
+                                        <h3 class="font-semibold text-slate-900">BigDataPE</h3>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">Manual interno de governança de dados - versão 2026.</p>
+                                </article>
+                                <article onclick="window.open('https://drive.expresso.pe.gov.br/s/SkXyupZLxUt1M0y', '_blank')"class="document-card border border-slate-200 rounded-3xl p-6 bg-slate-100 cursor-pointe">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <i data-lucide="file-text" class="w-6 h-6 text-blue-600"></i>
+                                        <h3 class="font-semibold text-slate-900">Power BI Report Server</h3>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">Fluxo de autorização para relatórios PBIRS.</p>
+                                </article>
+                                <article onclick="window.open('Manual_Hubbi.pdf', '_blank')"class="document-card border border-slate-200 rounded-3xl p-6 bg-slate-100 cursor-pointe">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <i data-lucide="file-text" class="w-6 h-6 text-blue-600"></i>
+                                        <h3 class="font-semibold text-slate-900">Manual Hubbi</h3>
+                                    </div>
+                                    <p class="text-slate-600 text-sm">Matriz de classificação de dados sensíveis.</p>
+                                </article>
+                            </div>
+                        </div>
+                        <div class="flex-1 bg-blue-950 text-white rounded-3xl p-8 shadow-lg">
+                            <h3 class="text-2xl font-bold mb-4">Gerenciar Documentos</h3>
+                            <p class="text-slate-300 mb-6">Adicione novos documentos ou acesse o armazenamento para downloads.</p>
+                            <div class="space-y-3">
+                                <a href="sitegda-add.html" class="block w-full bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition-all text-center">Adicionar Documento</a>
+                                <a href="sitegda-storage.html" class="block w-full bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 transition-all text-center">Ver Armazenamento</a>
+                            </div>
+                            <button onclick="logoutAtiInternal()" class="w-full bg-red-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-red-600 transition-all mt-6">Encerrar Sessão</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-10 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm">© 2026 GDA - ATI-PE. Área de documentos confidenciais.</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollBar').style.width = scrolled + "%";
+        });
+
+        function logoutAtiInternal() {
+            sessionStorage.removeItem('atiAccess');
+            window.location.href = 'sitegdaatudirec.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const isAuthenticated = sessionStorage.getItem('atiAccess') === 'granted';
+            if (!isAuthenticated) {
+                window.location.href = 'sitegdaatudirec.html';
+            }
+
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            const documentsList = document.getElementById('documentsList');
+            const articles = documentsList.querySelectorAll('article');
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                articles.forEach(article => {
+                    const title = article.querySelector('h3').textContent.toLowerCase();
+                    const desc = article.querySelector('p').textContent.toLowerCase();
+                    if (title.includes(query) || desc.includes(query)) {
+                        article.style.display = '';
+                    } else {
+                        article.style.display = 'none';
+                    }
+                });
+            });
+
+            // Modal functionality
+            const modal = document.getElementById('documentModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDescription = document.getElementById('modalDescription');
+            const closeBtn = document.querySelector('.close');
+
+            articles.forEach(article => {
+                article.addEventListener('click', function() {
+                    modalTitle.textContent = this.dataset.title;
+                    modalDescription.textContent = this.dataset.description;
+                    modal.style.display = 'block';
+                });
+            });
+
+            closeBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            // GSAP animations
+            gsap.from('.hero-sticker', { opacity: 0, y: -20, duration: 1, delay: 0.5 });
+            gsap.from('h1', { opacity: 0, y: 30, duration: 1, delay: 0.7 });
+            gsap.from('p', { opacity: 0, y: 30, duration: 1, delay: 0.9 });
+            gsap.from('.grid > div', { opacity: 0, y: 30, duration: 1, delay: 1.1, stagger: 0.2 });
+        });
+    </script>
+</body>
+</html>

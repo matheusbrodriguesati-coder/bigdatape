@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MODA - Metodologia Orientada a Dados Analíticos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --navy-profundo: #03045e;
+            --azul-real: #083f88;
+            --azul-corporativo: #0077b6;
+            --azul-tech: #00b4d8;
+            --ciano-luz: #90e0ef;
+            --branco: #ffffff;
+            --cinza-claro: #f8fafc;
+            --cinza-medio: #e7e9eb;
+            --texto-escuro: #28272c;
+            --texto-secundario: #494c57;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', 'Montserrat', sans-serif;
+            background: var(--cinza-claro);
+            color: var(--texto-escuro);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(3, 4, 94, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 30px rgba(3, 4, 94, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            padding: 0.5rem 2rem;
+            box-shadow: 0 8px 40px rgba(3, 4, 94, 0.4);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-logo img {
+            height: 50px;
+            width: auto;
+            filter: brightness(0) invert(1);
+        }
+
+        .nav-logo-text {
+            color: var(--branco);
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-logo-sub {
+            color: var(--ciano-luz);
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            transition: color 0.3s;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--azul-tech);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--branco);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--azul-tech), var(--azul-corporativo));
+            color: var(--branco);
+            padding: 0.7rem 1.8rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 180, 216, 0.3);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 180, 216, 0.4);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--branco);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--navy-profundo) 0%, var(--azul-real) 50%, var(--azul-corporativo) 100%);
+            position: relative;
+            overflow: hidden;
+            padding: 8rem 2rem 4rem;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(144, 224, 239, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 6s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 180, 216, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content {
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            color: var(--ciano-luz);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(144, 224, 239, 0.2);
+        }
+
+        .hero-badge i {
+            color: var(--azul-tech);
+        }
+
+        .hero-title {
+            font-size: 3.8rem;
+            font-weight: 900;
+            color: var(--branco);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, var(--ciano-luz), var(--azul-tech));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+            max-width: 500px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--azul-tech), var(--azul-corporativo));
+            color: var(--branco);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 8px 30px rgba(0, 180, 216, 0.35);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 180, 216, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--branco);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero-logo-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .hero-logo-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 50%;
+            filter: drop-shadow(0 20px 60px rgba(0,0,0,0.3));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-stats {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 2rem;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(3, 4, 94, 0.15);
+            z-index: 10;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0 1rem;
+            border-right: 1px solid var(--cinza-medio);
+        }
+
+        .stat-item:last-child {
+            border-right: none;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--navy-profundo);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--texto-secundario);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        section {
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+
+        .section-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(0, 180, 216, 0.1), rgba(144, 224, 239, 0.1));
+            color: var(--azul-corporativo);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(0, 180, 216, 0.2);
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--navy-profundo);
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .section-desc {
+            font-size: 1.1rem;
+            color: var(--texto-secundario);
+            line-height: 1.7;
+        }
+
+        .usage {
+            background: var(--branco);
+        }
+
+        .usage-grid {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-bottom: 0.5rem;
+            justify-content: space-between;
+        }
+
+        .usage-card {
+            background: var(--cinza-claro);
+            border-radius: 24px;
+            padding: 1.6rem;
+            box-shadow: 0 18px 40px rgba(3, 4, 94, 0.07);
+            transition: transform 0.3s ease;
+            flex: 0 0 calc((100% - 7rem) / 8);
+            min-width: 0;
+        }
+
+        .usage-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .usage-card .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--azul-tech);
+            color: var(--branco);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .tips {
+            background: var(--cinza-claro);
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 0.85fr;
+            gap: 2rem;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: grid;
+            gap: 1rem;
+        }
+
+        .tips-list li {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            color: var(--texto-secundario);
+        }
+
+        .tips-list li i {
+            color: var(--azul-tech);
+            margin-top: 0.2rem;
+        }
+
+        .toolkit {
+            background: var(--branco);
+        }
+
+        .toolkit-grid {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-bottom: 0.5rem;
+            justify-content: space-between;
+        }
+
+        .toolkit-item {
+            background: var(--cinza-claro);
+            border-radius: 24px;
+            padding: 1.6rem;
+            text-align: center;
+            box-shadow: 0 18px 40px rgba(3, 4, 94, 0.06);
+            transition: transform 0.3s ease;
+            flex: 0 0 calc((100% - 5rem) / 6);
+            min-width: 0;
+        }
+
+        .toolkit-item:hover {
+            transform: translateY(-6px);
+        }
+
+        .toolkit-icon {
+            font-size: 1.8rem;
+            color: var(--azul-tech);
+            background: rgba(0, 180, 216, 0.1);
+            width: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            border-radius: 18px;
+        }
+
+        .design {
+            background: var(--branco);
+        }
+
+        .design-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .design-card {
+            background: var(--cinza-claro);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid var(--cinza-medio);
+        }
+
+        .design-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(3, 4, 94, 0.12);
+        }
+
+        .design-card img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            max-height: 420px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .design-card h4 {
+            margin: 1.5rem 1.8rem 0.75rem;
+            font-size: 1.2rem;
+            color: var(--navy-profundo);
+        }
+
+        .design-card p {
+            margin: 0 1.8rem 1.8rem;
+            color: var(--texto-secundario);
+        }
+
+        .about {
+            background: var(--branco);
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .about-image img {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 24px;
+            box-shadow: 0 30px 80px rgba(3, 4, 94, 0.15);
+        }
+
+        .about-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--navy-profundo);
+            margin-bottom: 1.5rem;
+        }
+
+        .about-content p {
+            font-size: 1.05rem;
+            color: var(--texto-secundario);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .about-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .about-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--cinza-claro);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .about-feature:hover {
+            background: linear-gradient(135deg, rgba(0, 180, 216, 0.05), rgba(144, 224, 239, 0.05));
+            transform: translateX(5px);
+        }
+
+        .about-feature i {
+            font-size: 1.5rem;
+            color: var(--azul-tech);
+            margin-top: 0.2rem;
+        }
+
+        .about-feature-text h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--navy-profundo);
+            margin-bottom: 0.3rem;
+        }
+
+        .about-feature-text p {
+            font-size: 0.9rem;
+            color: var(--texto-secundario);
+            margin: 0;
+        }
+
+        .methodology {
+            background: var(--cinza-claro);
+        }
+
+        .methodology-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .method-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .method-card {
+            background: var(--branco);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(3, 4, 94, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 180, 216, 0.1);
+        }
+
+        .method-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--azul-tech), var(--azul-corporativo));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .method-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .method-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(3, 4, 94, 0.15);
+        }
+
+        .method-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, rgba(0, 180, 216, 0.1), rgba(144, 224, 239, 0.1));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: var(--azul-corporativo);
+        }
+
+        .method-card h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--navy-profundo);
+            margin-bottom: 1rem;
+        }
+
+        .method-card p {
+            font-size: 0.95rem;
+            color: var(--texto-secundario);
+            line-height: 1.7;
+        }
+
+        .method-number {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 3rem;
+            font-weight: 900;
+            color: rgba(0, 180, 216, 0.1);
+            line-height: 1;
+        }
+
+        .cycle {
+            background: var(--navy-profundo);
+            color: var(--branco);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cycle::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 180, 216, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .cycle-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cycle .section-tag {
+            background: rgba(255,255,255,0.1);
+            color: var(--ciano-luz);
+            border-color: rgba(144, 224, 239, 0.3);
+        }
+
+        .cycle .section-title {
+            color: var(--branco);
+        }
+
+        .cycle .section-desc {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .cycle-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .cycle-image {
+            display: flex;
+            justify-content: center;
+        }
+
+        .cycle-image img {
+            max-width: 100%;
+            max-width: 600px;
+            height: auto;
+            filter: drop-shadow(0 20px 60px rgba(0,0,0,0.4));
+            border-radius: 20px;
+        }
+
+        .cycle-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .cycle-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(144, 224, 239, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .cycle-step:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateX(10px);
+            border-color: rgba(144, 224, 239, 0.3);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            background: linear-gradient(135deg, var(--azul-tech), var(--azul-corporativo));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--branco);
+        }
+
+        .cycle-step h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--ciano-luz);
+            margin-bottom: 0.5rem;
+        }
+
+        .cycle-step p {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.6;
+        }
+
+        .brand {
+            background: var(--cinza-claro);
+        }
+
+        .brand-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .brand-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .brand-card {
+            background: var(--branco);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid var(--cinza-medio);
+        }
+
+        .brand-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(3, 4, 94, 0.1);
+        }
+
+        .brand-card-image {
+            width: 100%;
+            height: 320px;
+            object-fit: contain;
+            background: var(--branco);
+            padding: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-card-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-card-content {
+            padding: 1.5rem 2rem 2rem;
+        }
+
+        .brand-card-content h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--navy-profundo);
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-card-content p {
+            font-size: 0.9rem;
+            color: var(--texto-secundario);
+        }
+
+        .palette {
+            background: var(--branco);
+        }
+
+        .palette-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .palette-item {
+            background: var(--branco);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(3, 4, 94, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .palette-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(3, 4, 94, 0.12);
+        }
+
+        .palette-color {
+            height: 120px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .palette-color span {
+            background: rgba(255,255,255,0.9);
+            padding: 0.3rem 0.8rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--texto-escuro);
+        }
+
+        .palette-info {
+            padding: 1.2rem;
+        }
+
+        .palette-info h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--navy-profundo);
+            margin-bottom: 0.3rem;
+        }
+
+        .palette-info p {
+            font-size: 0.85rem;
+            color: var(--texto-secundario);
+        }
+
+        .vision {
+            background: var(--branco);
+        }
+
+        .vision-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .vision-card {
+            background: var(--cinza-claro);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(3, 4, 94, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid var(--cinza-medio);
+        }
+
+        .vision-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(3, 4, 94, 0.15);
+        }
+
+        .vision-card h4 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--navy-profundo);
+            margin-bottom: 1rem;
+        }
+
+        .vision-card p {
+            font-size: 0.95rem;
+            color: var(--texto-secundario);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .vision-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .vision-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            font-size: 0.9rem;
+            color: var(--texto-secundario);
+        }
+
+        .vision-list i {
+            color: var(--azul-tech);
+            font-size: 1.1rem;
+            margin-top: 0.2rem;
+            flex-shrink: 0;
+        }
+
+        .governance {
+            background: var(--cinza-claro);
+        }
+
+        .governance-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .governance-card {
+            background: var(--branco);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(3, 4, 94, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid var(--cinza-medio);
+        }
+
+        .governance-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(3, 4, 94, 0.15);
+        }
+
+        .governance-card h4 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--navy-profundo);
+            margin-bottom: 1rem;
+        }
+
+        .governance-card p {
+            font-size: 0.95rem;
+            color: var(--texto-secundario);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .governance-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .governance-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            font-size: 0.9rem;
+            color: var(--texto-secundario);
+        }
+
+        .governance-list i {
+            color: var(--azul-tech);
+            font-size: 1.1rem;
+            margin-top: 0.2rem;
+            flex-shrink: 0;
+        }
+
+        .applications {
+            background: var(--cinza-claro);
+        }
+
+        .applications-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .app-card {
+            background: var(--branco);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid var(--cinza-medio);
+        }
+
+        .app-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(3, 4, 94, 0.12);
+        }
+
+        .app-card-image {
+            width: 100%;
+            height: 260px;
+            object-fit: contain;
+            background: var(--branco);
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .app-card-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .app-card-content {
+            padding: 1.8rem;
+        }
+
+        .app-card-content h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--navy-profundo);
+            margin-bottom: 0.8rem;
+        }
+
+        .app-card-content p {
+            font-size: 0.95rem;
+            color: var(--texto-secundario);
+            line-height: 1.6;
+        }
+
+        .cta {
+            background: linear-gradient(135deg, var(--navy-profundo), var(--azul-real));
+            color: var(--branco);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0, 180, 216, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .cta-container {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .cta p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 2rem;
+        }
+
+        .footer {
+            background: var(--navy-profundo);
+            color: var(--branco);
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .footer-brand img {
+            height: 60px;
+            margin-bottom: 1rem;
+            filter: brightness(0) invert(1);
+        }
+
+        .footer-brand p {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.7;
+            max-width: 300px;
+        }
+
+        .footer-column h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--ciano-luz);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column ul li a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--azul-tech);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-bottom p {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--branco);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: var(--azul-tech);
+            transform: translateY(-3px);
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--azul-tech), var(--azul-corporativo));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--branco);
+            text-decoration: none;
+            font-size: 1.2rem;
+            box-shadow: 0 8px 25px rgba(0, 180, 216, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0, 180, 216, 0.5);
+        }
+
+        /* ===== ANIMATIONS ON SCROLL ===== */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 1024px) {
+            .hero-container,
+            .about-container,
+            .cycle-content {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .method-cards,
+            .app-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .brand-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .method-cards,
+            .palette-grid,
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .stat-item {
+                padding: 0 0.5rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar" id="navbar">
+        <div class="nav-logo">
+            <img src="imagempng.png"alt="ATI Central de Serviços" class="absolute -left-64 top-1/2 -translate-y-1/2 h-40 w-auto object-contain mix-blend-multiply"/>
+            <img src="ati-central-servicos.png"alt="ATI Central de Serviços" class="absolute right-12 top-1/2 -translate-y-1/2 h-20 w-auto object-contain mix-blend-multiply"/>
+            <div>
+                <div class="nav-logo-text"></div>
+                <div class="nav-logo-sub"></div>
+            </div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#inicio">Início</a></li>
+            <li><a href="#sobre">Sobre</a></li>
+            <li><a href="#metodologia">Metodologia</a></li>
+            <li><a href="#ciclo">Ciclo</a></li>
+            <li><a href="#como-usar">Como usar</a></li>
+            <li><a href="#marca">Marca</a></li>
+            <li><a href="#aplicacoes">Aplicações</a></li>
+            <li><a href="#visao-geral">Visão Geral</a></li>
+            <li><a href="#design">Design</a></li>
+        </ul>
+        <div class="nav-actions">
+            <a href="sitegdaatudirec.html" class="nav-cta">Site Principal</a>
+        </div>
+        <button class="mobile-menu-btn"><i class="fas fa-bars"></i></button>
+    </nav>
+
+    <section class="hero" id="inicio">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-chart-line"></i>
+                    Metodologia de Análise de Dados
+                </div>
+                <h1 class="hero-title">Transforme dados em <span>inteligência estratégica</span></h1>
+                <p class="hero-subtitle">A MODA estrutura o caos dos dados, transformando-os em um ciclo contínuo de melhoria e inteligência para decisões embasadas.</p>
+                <div class="hero-buttons">
+                    <a href="#metodologia" class="btn-primary">
+                        <i class="fas fa-rocket"></i>
+                        Conheça a Metodologia
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-logo-container">
+                    <img src="1.png" alt="MODA - Metodologia Orientada a Dados Analíticos">
+                </div>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <span class="stat-number">3</span>
+                <span class="stat-label">Etapas do Ciclo</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Orientado a Dados</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">∞</span>
+                <span class="stat-label">Ciclo Contínuo</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="sobre">
+        <div class="about-container">
+            <div class="about-image animate-on-scroll">
+                <img src="6.png" alt="MODA Logo Negativo">
+            </div>
+            <div class="about-content animate-on-scroll">
+                <div class="section-tag">Sobre a MODA</div>
+                <h3>Uma Metodologia, Não Apenas uma Ferramenta</h3>
+                <p>A MODA é o acrônimo para <strong>Metodologia Orientada a Dados Analíticos</strong>. Embora a sigla forme uma palavra comum, o conceito visual rompe com qualquer ambiguidade, posicionando a marca firmemente no território da gestão, tecnologia e inteligência.</p>
+                <p>Nosso propósito é estruturar o caos dos dados, transformando-os em um ciclo contínuo de melhoria e inteligência. A marca representa organização, clareza e o fluxo ininterrupto de informações.</p>
+                <div class="about-features">
+                    <div class="about-feature">
+                        <i class="fas fa-sync-alt"></i>
+                        <div class="about-feature-text">
+                            <h4>Ciclicidade</h4>
+                            <p>A análise de dados nunca para; é um processo contínuo de feedback.</p>
+                        </div>
+                    </div>
+                    <div class="about-feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <div class="about-feature-text">
+                            <h4>Solidez</h4>
+                            <p>Fontes robustas e geométricas passam a seriedade necessária para o setor governamental e corporativo.</p>
+                        </div>
+                    </div>
+                    <div class="about-feature">
+                        <i class="fas fa-eye"></i>
+                        <div class="about-feature-text">
+                            <h4>Transparência</h4>
+                            <p>Os tons de azul e ciano evocam clareza, tecnologia e confiança.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="methodology" id="metodologia">
+        <div class="methodology-container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-tag">Metodologia</div>
+                <h2 class="section-title">As Três Etapas do Ciclo Analítico</h2>
+                <p class="section-desc">O ciclo analítico da MODA é composto por três etapas fundamentais que garantem a transformação contínua de dados em insights estratégicos.</p>
+            </div>
+            <div class="method-cards">
+                <div class="method-card animate-on-scroll">
+                    <div class="method-number">01</div>
+                    <div class="method-icon"><i class="fas fa-database"></i></div>
+                    <h3>Coleta</h3>
+                    <p>Captura sistemática de dados de diversas fontes, garantindo a integridade e qualidade das informações desde a origem. A base sólida para toda análise subsequente.</p>
+                </div>
+                <div class="method-card animate-on-scroll">
+                    <div class="method-number">02</div>
+                    <div class="method-icon"><i class="fas fa-cogs"></i></div>
+                    <h3>Processamento</h3>
+                    <p>Transformação e organização dos dados brutos em informações estruturadas. Limpeza, normalização e preparação para análise avançada.</p>
+                </div>
+                <div class="method-card animate-on-scroll">
+                    <div class="method-number">03</div>
+                    <div class="method-icon"><i class="fas fa-chart-bar"></i></div>
+                    <h3>Análise</h3>
+                    <p>Extração de insights e padrões através de técnicas analíticas avançadas. Transformação de informações em conhecimento aplicável à tomada de decisões.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cycle" id="ciclo">
+        <div class="cycle-container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-tag">Ciclo Analítico</div>
+                <h2 class="section-title">O Símbolo do Ciclo Contínuo</h2>
+                <p class="section-desc">O elemento central da marca MODA representa o ciclo analítico em movimento constante, onde o insight de hoje alimenta a estratégia de amanhã.</p>
+            </div>
+            <div class="cycle-content">
+                <div class="cycle-image animate-on-scroll">
+                    <img src="1.png" alt="Ciclo Analítico MODA">
+                </div>
+                <div class="cycle-steps">
+                    <div class="cycle-step animate-on-scroll">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h4>O Símbolo - Ciclo Analítico</h4>
+                            <p>A letra "O" de MODA é substituída por um gráfico circular composto por setas em movimento, representando as etapas da metodologia: Coleta, Processamento e Análise.</p>
+                        </div>
+                    </div>
+                    <div class="cycle-step animate-on-scroll">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h4>Gráfico de Barras Central</h4>
+                            <p>No centro do "olho do furacão", os dados estão protegidos e organizados. As barras crescentes indicam evolução e resultados mensuráveis.</p>
+                        </div>
+                    </div>
+                    <div class="cycle-step animate-on-scroll">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h4>Tipografia Institucional</h4>
+                            <p>As letras "M", "D" e "A" em azul marinho oferecem base sólida. O uso de caixa alta reforça a autoridade e presença institucional da marca.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="usage" id="como-usar">
+        <div class="section-header animate-on-scroll">
+            <div class="section-tag">Como usar</div>
+            <h2 class="section-title">Aplicando a MODA no seu dia a dia</h2>
+            <p class="section-desc">Use este fluxo para estruturar o trabalho com dados e transformar cada etapa em valor estratégico.</p>
+        </div>
+        <div class="usage-grid animate-on-scroll">
+            <div class="usage-card">
+                <div class="step-number">1</div>
+                <h3>Entenda o desafio</h3>
+                <p>Defina claramente o objetivo do projeto antes de iniciar a coleta e análise.</p>
+            </div>
+            <div class="usage-card">
+                <div class="step-number">2</div>
+                <h3>Mapeie as fontes</h3>
+                <p>Identifique todas as fontes de dados disponíveis e como elas se conectam ao objetivo.</p>
+            </div>
+            <div class="usage-card">
+                <div class="step-number">3</div>
+                <h3>Organize o fluxo</h3>
+                <p>Configure o processamento para garantir qualidade, consistência e rastreabilidade.</p>
+            </div>
+            <div class="usage-card">
+                <div class="step-number">4</div>
+                <h3>Extraia valor</h3>
+                <p>Aplique análises que gerem insight e suportem decisões baseadas em dados.</p>
+            </div>
+            <div class="usage-card">
+                <div class="step-number">5</div>
+                <h3>Compartilhe resultados</h3>
+                <p>Apresente descobertas com clareza usando dashboards e relatórios visuais.</p>
+            </div>
+            <div class="usage-card">
+                <div class="step-number">6</div>
+                <h3>Alinhe com a equipe</h3>
+                <p>Faça com que todos os envolvidos compreendam o valor e a direção do projeto.</p>
+            </div>
+            <div class="usage-card">
+                <div class="step-number">7</div>
+                <h3>Monitore desempenho</h3>
+                <p>Acompanhe métricas e resultados para saber se a metodologia está gerando impacto.</p>
+            </div>
+            <div class="usage-card">
+                <div class="step-number">8</div>
+                <h3>Itere sempre</h3>
+                <p>Use o ciclo contínuo para ajustar processos e evoluir com base no feedback recebido.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="tips">
+        <div class="applications-container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-tag">Dicas</div>
+                <h2 class="section-title">Boas práticas para a implementação</h2>
+                <p class="section-desc">Algumas recomendações simples ajudam a manter a MODA consistente e efetiva em qualquer projeto.</p>
+            </div>
+            <div class="tips-grid animate-on-scroll">
+                <div>
+                    <ul class="tips-list">
+                        <li><i class="fas fa-check-circle"></i><span>Mantenha a qualidade dos dados desde a origem para garantir análises precisas.</span></li>
+                        <li><i class="fas fa-check-circle"></i><span>Use visualizações limpas para compartilhar resultados com usuários não técnicos.</span></li>
+                        <li><i class="fas fa-check-circle"></i><span>Adote métricas de sucesso claras e revise-as periodicamente.</span></li>
+                    </ul>
+                </div>
+                <div>
+                    <p>Um processo de dados confiável começa com disciplina e termina com aprendizado contínuo. Escolha ferramentas que favoreçam integrações seguras, automação e escalabilidade.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="toolkit">
+        <div class="applications-container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-tag">Toolkit</div>
+                <h2 class="section-title">Ferramentas e componentes essenciais</h2>
+                <p class="section-desc">A MODA é suportada por um conjunto de recursos que simplificam a governança, a execução e a comunicação dos dados.</p>
+            </div>
+            <div class="toolkit-grid animate-on-scroll">
+                <div class="toolkit-item">
+                    <div class="toolkit-icon"><i class="fas fa-database"></i></div>
+                    <h4>Data Warehouse</h4>
+                    <p>Armazenamento estruturado para centralizar dados e permitir consultas confiáveis.</p>
+                </div>
+                <div class="toolkit-item">
+                    <div class="toolkit-icon"><i class="fas fa-project-diagram"></i></div>
+                    <h4>ETL & Integração</h4>
+                    <p>Processos automatizados que transformam e atualizam dados de forma segura.</p>
+                </div>
+                <div class="toolkit-item">
+                    <div class="toolkit-icon"><i class="fas fa-chart-line"></i></div>
+                    <h4>Dashboards</h4>
+                    <p>Visualizações claras que tornam o resultado dos dados acessível para todos.</p>
+                </div>
+                <div class="toolkit-item">
+                    <div class="toolkit-icon"><i class="fas fa-chart-simple"></i></div>
+                    <h4>Análise Avançada</h4>
+                    <p>Técnicas que extraem padrões, tendências e oportunidades a partir dos dados.</p>
+                </div>
+                <div class="toolkit-item">
+                    <div class="toolkit-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h4>Governança</h4>
+                    <p>Regras e controles para proteger os dados e manter a confiança na informação.</p>
+                </div>
+                <div class="toolkit-item">
+                    <div class="toolkit-icon"><i class="fas fa-palette"></i></div>
+                    <h4>Design</h4>
+                    <p>Comunicação visual que destaca o valor do dado sem comprometer a legibilidade.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="brand" id="marca">
+        <div class="brand-container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-tag">Identidade Visual</div>
+                <h2 class="section-title">Versões da Marca</h2>
+                <p class="section-desc">A versatilidade do MODA permite sua aplicação em diversos suportes sem perder a identidade e o reconhecimento visual.</p>
+            </div>
+            <div class="brand-grid">
+                <div class="brand-card animate-on-scroll">
+                    <div class="brand-card-image">
+                        <img src="1.png" alt="Assinatura Principal">
+                    </div>
+                    <div class="brand-card-content">
+                        <h3>Assinatura Principal</h3>
+                        <p>Logotipo completo com tagline "Metodologia Orientada a Dados Analíticos". Ideal para capas de relatórios e documentos oficiais.</p>
+                    </div>
+                </div>
+                <div class="brand-card animate-on-scroll">
+                    <div class="brand-card-image">
+                        <img src="2.png" alt="Assinatura Secundária">
+                    </div>
+                    <div class="brand-card-content">
+                        <h3>Assinatura Secundária</h3>
+                        <p>Versão sem tagline para redes sociais, rodapés e espaços reduzidos onde a leitura completa ficaria comprometida.</p>
+                    </div>
+                </div>
+                <div class="brand-card animate-on-scroll">
+                    <div class="brand-card-image" style="background: white;">
+                        <img src="3.png" alt="Versão Monocromática">
+                    </div>
+                    <div class="brand-card-content">
+                        <h3>Versão Monocromática</h3>
+                        <p>Para impressões em uma cor ou documentos em preto e branco, mantendo a integridade visual da marca.</p>
+                    </div>
+                </div>
+                <div class="brand-card animate-on-scroll">
+                    <div class="brand-card-image" style="background: black;">
+                        <img src="5.png" alt="Versão Negativa">
+                    </div>
+                    <div class="brand-card-content">
+                        <h3>Versão Negativa</h3>
+                        <p>Obrigatória para aplicações sobre fundos escuros ou fotos, garantindo contraste e legibilidade em qualquer contexto.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="palette">
+        <div class="palette-container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-tag">Paleta de Cores</div>
+                <h2 class="section-title">Blue on Blue</h2>
+                <p class="section-desc">A paleta do MODA é um estudo monocromático de azuis, criando uma escala tonal que representa a profundidade da análise de dados.</p>
+            </div>
+            <div class="palette-grid">
+                <div class="palette-item animate-on-scroll">
+                    <div class="palette-color" style="background: #03045e;">
+                        <span>#03045e</span>
+                    </div>
+                    <div class="palette-info">
+                        <h4>Navy Profundo</h4>
+                        <p>Base mais escura da marca. Representa autoridade, profundidade e estabilidade institucional.</p>
+                    </div>
+                </div>
+                <div class="palette-item animate-on-scroll">
+                    <div class="palette-color" style="background: #083f88;">
+                        <span style="color: white;">#083f88</span>
+                    </div>
+                    <div class="palette-info">
+                        <h4>Azul Real</h4>
+                        <p>Variação institucional ideal para fundos corporativos e materiais impressos.</p>
+                    </div>
+                </div>
+                <div class="palette-item animate-on-scroll">
+                    <div class="palette-color" style="background: #0077b6;">
+                        <span style="color: white;">#0077b6</span>
+                    </div>
+                    <div class="palette-info">
+                        <h4>Azul Corporativo</h4>
+                        <p>O equilíbrio entre o técnico e o corporativo. Usado para subtítulos e destaques.</p>
+                    </div>
+                </div>
+                <div class="palette-item animate-on-scroll">
+                    <div class="palette-color" style="background: #00b4d8;">
+                        <span style="color: white;">#00b4d8</span>
+                    </div>
+                    <div class="palette-info">
+                        <h4>Azul Tech</h4>
+                        <p>Azul vibrante que traz modernidade. Usado em ícones e gráficos para chamar atenção.</p>
+                    </div>
+                </div>
+                <div class="palette-item animate-on-scroll">
+                    <div class="palette-color" style="background: #90e0ef;">
+                        <span>#90e0ef</span>
+                    </div>
+                    <div class="palette-info">
+                        <h4>Ciano Luz</h4>
+                        <p>Representa o "insight", a clareza e o futuro. Usado nos arcos do ciclo analítico.</p>
+                    </div>
+                </div>
+                <div class="palette-item animate-on-scroll">
+                    <div class="palette-color" style="background: #ffffff; border: 2px solid #e7e9eb;">
+                        <span>#ffffff</span>
+                    </div>
+                    <div class="palette-info">
+                        <h4>Branco Puro</h4>
+                        <p>Fundamental para o respiro e contraste. Usado como fundo e versão negativa.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="applications" id="aplicacoes">
+        <div class="applications-container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-tag">Aplicações</div>
+                <h2 class="section-title">A Marca em Ação</h2>
+                <p class="section-desc">A marca MODA foi desenhada para viver tanto no ambiente digital quanto no físico, transmitindo pertencimento e qualidade em cada aplicação.</p>
+            </div>
+            <div class="app-grid">
+                <div class="app-card animate-on-scroll">
+                    <div class="app-card-image">
+                        <img src="1.png" alt="Ambiente Corporativo">
+                    </div>
+                    <div class="app-card-content">
+                        <h3><i class="fas fa-briefcase" style="color: var(--azul-tech); margin-right: 0.5rem;"></i>Ambiente Corporativo</h3>
+                        <p>A sobriedade do azul marinho permite aplicações elegantes em materiais de escritório. Em sacolas, cadernos e crachás, a marca transmite pertencimento a um grupo seleto.</p>
+                    </div>
+                </div>
+                <div class="app-card animate-on-scroll">
+                    <div class="app-card-image">
+                        <img src="2.png" alt="Mídias Digitais">
+                    </div>
+                    <div class="app-card-content">
+                        <h3><i class="fas fa-desktop" style="color: var(--azul-tech); margin-right: 0.5rem;"></i>Mídias Digitais</h3>
+                        <p>Nos painéis e apresentações, a marca atua como um selo de qualidade. O uso dos tons de azul claro em telas ajuda a destacar a informação sem cansar a vista.</p>
+                    </div>
+                </div>
+                <div class="app-card animate-on-scroll">
+                    <div class="app-card-image" style="background: #000;"> 
+                        <img src="6.png" alt="Ambientes de Reunião">
+                    </div>
+                    <div class="app-card-content">
+                        <h3><i class="fas fa-users" style="color: var(--azul-tech); margin-right: 0.5rem;"></i>Ambientes de Reunião</h3>
+                        <p>A presença da marca em telas grandes de reuniões reforça que as decisões tomadas ali são embasadas em dados e metodologia comprovada.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="vision" id="visao-geral">
+        <div class="applications-container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-tag">Visão Geral</div>
+                <h2 class="section-title">Uma abordagem clara para dados estratégicos</h2>
+                <p class="section-desc">A MODA une governança, análise e design para transformar dados complexos em ações práticas e decisões confiáveis.</p>
+            </div>
+            <div class="vision-grid animate-on-scroll">
+                <div class="vision-card">
+                    <h4>Propósito</h4>
+                    <p>Organizar o fluxo de dados em um ciclo contínuo, tornando a informação acessível para gestores, analistas e equipes técnicas.</p>
+                    <ul class="vision-list">
+                        <li><i class="fas fa-check-circle"></i><span>Centralização de processos e documentação.</span></li>
+                        <li><i class="fas fa-check-circle"></i><span>Qualidade e rastreabilidade das fontes.</span></li>
+                        <li><i class="fas fa-check-circle"></i><span>Resultados mensuráveis com indicadores claros.</span></li>
+                    </ul>
+                </div>
+                <div class="vision-card">
+                    <h4>Impacto</h4>
+                    <p>Reduzir ciclos de tomada de decisão e aumentar a confiança nos dados usados para planejamento e controle.</p>
+                    <ul class="vision-list">
+                        <li><i class="fas fa-check-circle"></i><span>Melhora da transparência entre áreas.</span></li>
+                        <li><i class="fas fa-check-circle"></i><span>Maior aderência às políticas de governança.</span></li>
+                        <li><i class="fas fa-check-circle"></i><span>Entrega de insights mais rápidos e consistentes.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="governance" id="governanca">
+        <div class="applications-container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-tag">Governança</div>
+                <h2 class="section-title">Governança e evolução</h2>
+                <p class="section-desc">A evolução da MODA passa pela implementação de regras, padrões e mecanismos que garantem dados confiáveis e reutilizáveis.</p>
+            </div>
+            <div class="governance-grid animate-on-scroll">
+                <div class="governance-card">
+                    <h4>Gestão de dados</h4>
+                    <p>Defina papéis, responsabilidades e fluxos claros para o ciclo de vida dos dados.</p>
+                    <ul class="governance-list">
+                        <li><i class="fas fa-user-shield"></i><span>Políticas de acesso e classificação.</span></li>
+                        <li><i class="fas fa-file-alt"></i><span>Documentação de métricas e indicadores.</span></li>
+                        <li><i class="fas fa-tools"></i><span>Monitoramento contínuo de qualidade.</span></li>
+                    </ul>
+                </div>
+                <div class="governance-card">
+                    <h4>Evolução contínua</h4>
+                    <p>Use feedback e resultados reais para ajustar o processo e manter a metodologia sempre atualizada.</p>
+                    <ul class="governance-list">
+                        <li><i class="fas fa-sync-alt"></i><span>Retroalimentação entre análise e execução.</span></li>
+                        <li><i class="fas fa-chart-line"></i><span>Alertas em tempo real para desvios críticos.</span></li>
+                        <li><i class="fas fa-users"></i><span>Capacitação e adoção pelas equipes.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="design" id="design">
+        <div class="applications-container">
+            <div class="section-header animate-on-scroll">
+                <div class="section-tag">Design</div>
+                <h2 class="section-title">Design pensado para dados e pessoas</h2>
+                <p class="section-desc">A apresentação visual deve reforçar a clareza dos dados, tornando cada insight mais fácil de entender e usar.</p>
+            </div>
+            <div class="design-grid animate-on-scroll">
+                <div class="design-card">
+                    <img src="3.png" alt="Design de interface MODA">
+                    <h4>Visual intuitivo</h4>
+                    <p>Layouts limpos, tipografia legível e hierarquia clara garantem a compreensão rápida das informações.</p>
+                </div>
+                <div class="design-card">
+                    <img src="4.png" alt="Design de informações MODA">
+                    <h4>Arquitetura de informação</h4>
+                    <p>Conteúdos e indicadores organizados em blocos visuais que acompanham o ciclo de dados.</p>
+                </div>
+                <div class="design-card">
+                    <img src="5.png" alt="Aplicações visuais MODA">
+                    <h4>Aplicações reais</h4>
+                    <p>O uso consistente da paleta azul e dos ícones reforça confiança em relatórios e dashboards.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta" id="contato">
+        <div class="cta-container">
+            <h2>Pronto para transformar seus dados?</h2>
+            <p>Adote a MODA e comece a estruturar o caos dos seus dados em um ciclo contínuo de melhoria e inteligência estratégica.</p>
+            <a href="#inicio" class="btn-primary" style="margin-top: 1rem;">
+                <i class="fas fa-arrow-up"></i>
+                Voltar ao Topo
+            </a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="footer-logo">GDA</div>
+                <p>Gerência de Governança de Dados. Estruturando o caos dos dados em inteligência estratégica desde 2025.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Navegação</h4>
+                <ul>
+                    <li><a href="#inicio">Início</a></li>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#metodologia">Metodologia</a></li>
+                    <li><a href="#ciclo">Ciclo</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Marca</h4>
+                <ul>
+                    <li><a href="#marca">Identidade Visual</a></li>
+                    <li><a href="#aplicacoes">Aplicações</a></li>
+                    <li><a href="#como-usar">Como usar</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Contato</h4>
+                <ul>
+                    <li><a href="#"><i class="fas fa-envelope" style="margin-right: 0.5rem;"></i>contato@moda.gov.br</a></li>
+                    <li><a href="#"><i class="fas fa-phone" style="margin-right: 0.5rem;"></i>(81) 3182-7000</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i>Recife, PE</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p> 2025 MODA - Metodologia Orientada a Dados Analíticos. Todos os direitos reservados.</p>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#inicio" class="scroll-top" id="scrollTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        const scrollTop = document.getElementById('scrollTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
+            }
+        });
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

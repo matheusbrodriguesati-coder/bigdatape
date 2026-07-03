@@ -1,0 +1,224 @@
+
+====================================================================================================
+FILE: PCAD - Manual do usußrio - Portal bigdata.pe.gov.br_v3.1.pdf
+--- PAGE 1 ---
+Portal bigdata.pe.gov.br
+Manual
+Responsßveis:
+Equipe da Plataforma de
+Compartilhamento e Anßlise de
+Dados
+GerÛncia de Projetos e Qualidade da InformaþÒo - DIC/ATI
+VersÒo 3.1
+--- PAGE 2 ---
+Hist¾rico de alteraþ§es
+Data VersÒo DescriþÒo Autor
+22/10/2020 1.1 InÝcio do documento Fßbrica de Neg¾cio
+12/01/2021 1.2 Reformatando para modelo ATI Ajustes nas Eronita Van Leijden
+seþ§es 3.2.1, 3.2.2 e 3.2.3. InclusÒo de
+processo na seþÒo 4.1
+15/02/2021 1.3 AdiþÒo e ajuste das figuras; AdiþÒo das Fßbrica de Neg¾cio
+seþ§es 3.3.2.1, 3.3.2.2, 8, 8.1 e 8.2; Ajustes
+na formataþÒo do documento; AdequaþÒo
+dos textos das seþ§es anteriores, com as
+novas funcionalidades do portal; AdiþÒo de
+links para encaminhamento da seþÒo;
+24/02/2021 1.4 Pequenos ajustes no decorrer do Cassiane Bueno
+documento.
+09/03/2021 1.5 Completando informaþÒo sobre Consumo Eronita Van Leijden
+de dados via web service, quanto as aspas;
+11/03/2021 1.6 InserþÒo de imagens de diagramas do Cassiane Bueno
+Archi.
+18/03/2021 1.7 InserþÒo da seþÒo Realizar concessÒo de Eronita Van Leijden
+acesso a conjunto de dados. Trocar Cassiane Bueno
+Expresso Livre por SEI num local que fala
+do acesso do interessado. Ajuste na URL de
+consulta REST.
+24/08/2021 1.8 AdiþÒo do tipo de usußrio ôExternoö; Fßbrica de Neg¾cio
+inserþÒo da seþÒo 5.5 (Associaþ§es de
+usußrios) e 9 (InstituiþÒo) e novas figuras;
+27/08/2021 1.9 Ajustes na formataþÒo e organizaþÒo do Eronita Van Leijden
+documento, ajustes figura funcionalidades
+do portal, inclusÒo figura 47 e adequaþÒo na
+explicaþÒo da seþÒo 9 (instituiþÒo)
+15/05/2022 1.10 Alguns ajustes: Eronita Van Leijden
+-InserþÒo da subseþÒo ôrecuperaþÒo de
+senhaö
+18/08/2022 1.11 RevisÒo atÚ seþÒo 4 (gestÒo de dados). Eronita Van Leijden
+Detalhando informaþ§es sobre o pedido de
+mudanþa ao (Criar/Alterar/Deletar)
+conjuntos de dados por um controlador.
+InserþÒo da seþÒo ôPreenchimento dos
+metadados AUTOMATIZADOö. Melhora no
+descritivo da criaþÒo da associaþÒo (token).
+29/12/2022 1.12 RevisÒo atÚ seþÒo 4 (gestÒo de dados). Eronita Van Leijden
+InclusÒo sobre automatizaþÒo na carga para
+arquivos CSVs.
+01/02/2024 2.0 RevisÒo de todo o documento de acordo Matheus Ferreira
+com a versÒo 3.0 do Portal, atualizaþÒo das
+imagens, substituiþÒo de termos tÚcnicos,
+remoþÒo das seþ§es de superusußrio.
+18/12/2024 3.0 InserþÒo da seþÒo AnonimizaþÒo de Dados Igor Gomes
+09/06/2025 3.1 QualificaþÒo de Conjunto e Reset de Senha Igor Gomes
+e UnificaþÒo de Pedido de Acesso
+2
+--- PAGE 3 ---
+Sumßrio
+1. IntroduþÒo ............................................................................................................... 6
+1. IntroduþÒo ............................................................................................................... 6
+2. Acesso Ó Plataforma ............................................................................................... 7
+2. Acesso Ó Plataforma ............................................................................................... 7
+2.1. Acesso de usußrios interessados .......................................................... 7
+2.2. Acesso de usußrios cadastrados ........................................................... 9
+2.3. RecuperaþÒo de Senha ....................................................................... 11
+3. Catßlogo de Dados ................................................................................................ 13
+3.1. Visualizar catßlogo de conjuntos de dados .......................................... 13
+3.2. Realizar solicitaþÒo de acesso a conjunto de dados ............................ 15
+3.2.1. Primeira SolicitaþÒo ....................................................................... 15
+3.2.2. SolicitaþÒo de Conjunto de Dados DISPON═VEL na Plataforma ... 18
+3.4. Consumo de dados via web service .................................................... 19
+3.4.1. Como fazer uma requisiþÒo ........................................................... 20
+3.4.2. Como passar filtros na minha requisiþÒo ....................................... 20
+3.4.2.1 PaginaþÒo ................................................................................ 20
+3.4.2.2 Consumir dados por token de acesso ...................................... 22
+4. GestÒo de Dados .................................................................................................. 23
+4.1 Criar conjunto de dados ........................................................................ 23
+4.1.1. Cadastrar novo Conjunto no Portal ............................................... 23
+4.2. Formas de ingestÒo de dados .............................................................. 32
+4.2. Formas de ingestÒo de dados .............................................................. 32
+4.3. GestÒo de Dados ................................................................................. 34
+4.3. GestÒo de Dados ................................................................................. 34
+Editar conjunto de dados ......................................................................... 34
+Editar conjunto de dados ......................................................................... 34
+Script SQL ............................................................................................... 36
+Script SQL ............................................................................................... 36
+Agendamento da ExecuþÒo .................................................................... 36
+AssociaþÒo de conjuntos ......................................................................... 37
+4.3.1 AnonimizaþÒo de Conjunto de Dados ................................................ 40
+4.4. Deletar conjunto de dados ................................................................... 40
+5. GestÒo de Usußrios ............................................................................................... 41
+5.1. Perfis de usußrio .................................................................................. 41
+5.1. Perfis de usußrio .................................................................................. 41
+3
+--- PAGE 4 ---
+5.2. CriaþÒo de novo usußrio ...................................................................... 42
+5.2. CriaþÒo de novo usußrio ...................................................................... 42
+5.3. Editando contas de usußrio .................................................................. 44
+5.3. Editando contas de usußrio .................................................................. 44
+5.3.1. Visualizando tokens de acesso de usußrios .................................. 45
+5.3.1. Visualizando tokens de acesso de usußrios .................................. 45
+5.3.2. Hist¾rico de acesso do usußrio ..................................................... 46
+5.3.2. Hist¾rico de acesso do usußrio ..................................................... 46
+5.3.3. Hist¾rico de pedidos de acesso ..................................................... 47
+5.3.3. Hist¾rico de pedidos de acesso ..................................................... 47
+5.4. Gerenciar pedidos de acesso .............................................................. 47
+5.4. Gerenciar pedidos de acesso .............................................................. 47
+5.4.1 Regras bßsicas para a gestÒo de pedidos de acesso .................... 47
+5.4.1 Regras bßsicas para a gestÒo de pedidos de acesso .................... 47
+5.4.2 GestÒo de pedidos de acesso ........................................................ 48
+5.4.2 GestÒo de pedidos de acesso ........................................................ 48
+5.5. Associaþ§es de usußrios ..................................................................... 50
+5.5. Associaþ§es de usußrios ..................................................................... 50
+6. Gerenciar Conta de Usußrio .................................................................................. 51
+6. Gerenciar Conta de Usußrio .................................................................................. 51
+6.1. VisualizaþÒo do perfil de usußrio ......................................................... 51
+6.1. VisualizaþÒo do perfil de usußrio ......................................................... 51
+7. EstatÝsticas Gerais ................................................................................................ 54
+7. EstatÝsticas Gerais ................................................................................................ 54
+7.1. EstatÝsticas: Conjuntos de dados ......................................................... 55
+7.1. EstatÝsticas: Conjuntos de dados ......................................................... 55
+7.2. EstatÝsticas: Apache Hadoop ............................................................... 56
+7.2. EstatÝsticas: Apache Hadoop ............................................................... 56
+7.3. EstatÝsticas: MongoDB ......................................................................... 56
+7.3. EstatÝsticas: MongoDB ......................................................................... 56
+7.4. EstatÝsticas: Ingestor de dados ............................................................ 57
+7.4. EstatÝsticas: Ingestor de dados ............................................................ 57
+7.5. EstatÝsticas: Camada de Serviþo ......................................................... 58
+7.5. EstatÝsticas: Camada de Serviþo ......................................................... 58
+4
+--- PAGE 5 ---
+5
+--- PAGE 6 ---
+1. IntroduþÒo
+Este manual visa orientar os usußrios da Plataforma de Compartilhamento e
+Anßlise de Dados, na utilizaþÒo de todas as funcionalidades atualmente disponÝveis
+para utilizaþÒo.
+No t¾pico ôAcesso Ó Plataformaö serß abordado o processo de login de usußrios
+nÒo cadastrados que estejam interessados no consumo dos dados disponÝveis. Assim
+como, o acesso dos usußrios jß cadastrados na Plataforma.
+O t¾pico ôCatßlogo de dadosö aborda a visualizaþÒo do catßlogo de conjuntos
+de dados disponÝveis na Plataforma, como realizar os pedidos de acesso a esses
+dados e os meios disponibilizados pelo sistema para o consumo deles.
+O t¾pico ôGestÒo de dadosö mostra como os usußrios administradores do
+sistema podem gerenciar a inserþÒo dos conjuntos de dados na Plataforma, assim
+como o processo de editar e remover os conjuntos de dados existentes.
+O t¾pico ôGestÒo de usußriosö apresenta as funcionalidades de gerenciamento
+de usußrios feita por usußrios administradores, Ú exposto neste t¾pico: o acesso ao
+perfil dos usußrios, ediþÒo de informaþ§es cadastrais, identificaþÒo dos tokens e
+acessos que determinado usußrio possui e o gerenciamento dos pedidos de acesso
+aos conjuntos de dados.
+O t¾pico ôGerenciar contas de usußriosö aborda como um usußrio pode acessar
+seu pr¾prio perfil e como localizar informaþ§es como: informaþ§es cadastrais, tokens
+de acesso para consumo de dados, hist¾rico de acesso ao sistema e hist¾rico de
+pedidos de acesso a conjuntos de dados.
+O t¾pico de ôEstatÝsticas Geraisö apresenta diversas mÚtricas e informaþ§es
+sobre as tecnologias responsßveis pelo armazenamento e movimentaþÒo dos dados
+na Plataforma.
+6
+--- PAGE 7 ---
+2. Acesso Ó Plataforma
+O acesso Ó Plataforma Ú realizado no endereþo: https://www.bigdata.pe.gov.br
+. Ao realizar o acesso, o usußrio serß levado Ó tela da (Figura 1).
+Figura 1: Tela de acesso de usußrio.
+2.1. Acesso de usußrios interessados
+O agente p·blico que nÒo possua conta criada na Plataforma e estß
+interessado em acessar o catßlogo de dados, pode utilizar a mesma conta de login
+(usußrio e senha) cadastrada no SEI (Sistema Eletr¶nico de Informaþ§es). Ap¾s
+inserir suas credenciais, o usußrio deverß clicar no botÒo ôEntrar como interessadoö,
+como mostra a Figura 2:
+7
+--- PAGE 8 ---
+Figura 2: Recorte da ßrea de login como usußrio interessado.
+Ap¾s o login bem-sucedido, o usußrio interessado serß direcionado a tela inicial
+da Plataforma (Figura 3). Nesta tela poderß realizar as seguintes aþ§es indicadas nos
+itens:
+Figura 3: Tela inicial do usußrio interessado.
+1 Visualizar o catßlogo de dados da Plataforma. Ver ôVisualizar Catßlogo de
+Conjuntos de Dadosö.
+2 Conta: Acompanhar o andamento dos pedidos de acesso aos conjuntos de
+dados no item ôContaö. Ver ôVisualizaþÒo do Perfil de Usußrioö.
+8
+--- PAGE 9 ---
+2.2. Acesso de usußrios cadastrados
+Usußrios com cadastro jß aprovado podem ingressar na Plataforma inserindo
+seu usußrio e senha nos campos indicados na Figura 4 e devem acessar pelo botÒo
+ôEntrar em conta especÝfica de usußrioö.
+Figura 4: Recorte da tela de acesso do usußrio.
+Ap¾s inserir as credenciais, um c¾digo de 6 dÝgitos serß enviado para os e-
+mails cadastrados pelo usußrio na Plataforma, exemplo do modelo de e-mail pode ser
+visto na Figura 5 .
+Figura 5: Modelo do e-mail a ser enviado para o usußrio na autenticaþÒo de
+dois fatores.
+O c¾digo recebido por e-mail deve ser inserido no campo ôC¾digo de
+verificaþÒoö ( Figura 6 ). Ao confirmar, o usußrio estarß logado na Plataforma.
+9
+--- PAGE 10 ---
+C:/Users/matheus.rodrigues/.local/bin/python3.14.exe : Traceback (most recent 
+call last):
+No linha:1 caractere:114
++ ... thon_deps'; C:/Users/matheus.rodrigues/.local/bin/python3.14.exe extr ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last) 
+   ::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\Users\matheus.rodrigues\Documents\hd\python\email\sitegda\extract_bi
+gdata_text.py", line 25, in <module>
+    print(text)
+    ~~~~~^^^^^^
+  File "C:\Users\matheus.rodrigues\AppData\Roaming\uv\python\cpython-3.14-windo
+ws-x86_64-none\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u25cf' in 
+position 529: character maps to <undefined>

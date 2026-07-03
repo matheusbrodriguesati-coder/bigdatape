@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BigData PE — Plataforma de Compartilhamento e Análise de Dados</title>
+<meta name="description" content="Portal BigData PE: governança, ingestão, pipelines e compartilhamento seguro de dados do Estado de Pernambuco." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter','ui-sans-serif','system-ui','sans-serif'], mono: ['ui-monospace','SFMono-Regular','Menlo','monospace'] },
+        colors: {
+          background: 'var(--background)',
+          foreground: 'var(--foreground)',
+          card: { DEFAULT: 'var(--card)', foreground: 'var(--card-foreground)' },
+          primary: { DEFAULT: 'var(--primary)', foreground: 'var(--primary-foreground)' },
+          secondary: { DEFAULT: 'var(--secondary)', foreground: 'var(--secondary-foreground)' },
+          muted: { DEFAULT: 'var(--muted)', foreground: 'var(--muted-foreground)' },
+          accent: { DEFAULT: 'var(--accent)', foreground: 'var(--accent-foreground)' },
+          destructive: { DEFAULT: 'var(--destructive)', foreground: 'var(--destructive-foreground)' },
+          border: 'var(--border)',
+          input: 'var(--input)',
+          ring: 'var(--ring)',
+          'chart-1':'var(--chart-1)','chart-2':'var(--chart-2)','chart-3':'var(--chart-3)','chart-4':'var(--chart-4)','chart-5':'var(--chart-5)',
+        },
+        borderRadius: { lg:'var(--radius)', md:'calc(var(--radius) - 2px)', sm:'calc(var(--radius) - 4px)', xl:'calc(var(--radius) + 4px)', '2xl':'calc(var(--radius) + 8px)', '3xl':'calc(var(--radius) + 12px)' },
+        keyframes: { 'fade-up':{ '0%':{opacity:0,transform:'translateY(12px)'},'100%':{opacity:1,transform:'translateY(0)'}}, 'pulse-soft':{'0%,100%':{opacity:1},'50%':{opacity:.4}} },
+        animation: { 'fade-up':'fade-up .4s ease both', 'pulse-soft':'pulse-soft 1s ease-in-out infinite' },
+      },
+    },
+</script></script>>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root{
+    --radius:.875rem;
+    --background:#ffffff;
+    --foreground:#0f172a;
+    --card:#ffffff; --card-foreground:#0f172a;
+    --primary:#0284c7; --primary-foreground:#ffffff;
+    --secondary:#f8fafc; --secondary-foreground:#334155;
+    --muted:#f8fafc; --muted-foreground:#64748b;
+    --accent:#e0f2fe; --accent-foreground:#075985;
+    --destructive:#dc2626; --destructive-foreground:#ffffff;
+    --border:#e2e8f0; --input:#e2e8f0; --ring:#0284c7;
+    --chart-1:#0284c7; --chart-2:#38bdf8; --chart-3:#6366f1; --chart-4:#10b981; --chart-5:#a855f7;
+    --gradient-hero: linear-gradient(180deg,#fafbfc 0%,#ffffff 100%);
+    --gradient-text: linear-gradient(135deg,#0284c7,#4338ca);
+    --gradient-cta:  linear-gradient(135deg,#0f172a,#1e293b);
+    --shadow-glow: 0 8px 24px -12px rgba(15,23,42,.15);
+    --shadow-card: 0 1px 2px rgba(15,23,42,.04), 0 4px 12px -6px rgba(15,23,42,.06);
+  }
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;background:var(--background);color:var(--foreground)}
+  .bg-hero{background:var(--gradient-hero)}
+  .bg-cta{background:var(--gradient-cta)}
+  .text-gradient{background:var(--gradient-text);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .shadow-glow{box-shadow:var(--shadow-glow)}
+  .shadow-card{box-shadow:var(--shadow-card)}
+  .size-1\.5{width:.375rem;height:.375rem}.size-3{width:.75rem;height:.75rem}.size-3\.5{width:.875rem;height:.875rem}
+  .size-4{width:1rem;height:1rem}.size-5{width:1.25rem;height:1.25rem}.size-6{width:1.5rem;height:1.5rem}
+  .size-8{width:2rem;height:2rem}.size-10{width:2.5rem;height:2.5rem}.size-11{width:2.75rem;height:2.75rem}
+  .size-12{width:3rem;height:3rem}.size-14{width:3.5rem;height:3.5rem}.size-96{width:24rem;height:24rem}
+  .lucide{display:inline-block;vertical-align:middle}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+<script type="text/babel" id="app-jsx">
+const { useState, useEffect, useRef } = React;
+
+function resolveLucideIconName(name) {
+  if (!name) return name;
+  if (lucide.icons?.[name] || lucide[name]) return name;
+  return name
+    .split(/[-_]/g)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+}
+
+function Icon({ name, className = "" }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const resolvedName = resolveLucideIconName(name);
+    const node = lucide.icons?.[resolvedName] || lucide[resolvedName] || lucide.icons?.[name] || lucide[name];
+    if (!node || !ref.current) return;
+    ref.current.innerHTML = "";
+    const el = lucide.createElement(node);
+    el.setAttribute("class", "lucide " + className);
+    ref.current.appendChild(el);
+  }, [name, className]);
+  return <span ref={ref} className="inline-flex shrink-0" />;
+}
+
+function TypewriterCode({ segments, typingSpeed=24, className="", startDelay=400, restartDelay=3000, repeat=true }) {
+
+  const [segIndex,setSegIndex]=useState(0);
+  const [charIndex,setCharIndex]=useState(0);
+  const [hasStarted,setHasStarted]=useState(false);
+  const [isComplete,setIsComplete]=useState(false);
+  const containerRef=useRef(null);
+
+  useEffect(()=>{
+    const el=containerRef.current; if(!el) return;
+    const ob=new IntersectionObserver(([e])=>{ if(e.isIntersecting && !hasStarted) setHasStarted(true); },{threshold:.25});
+    ob.observe(el); return ()=>ob.disconnect();
+  },[hasStarted]);
+
+  useEffect(()=>{
+    if(!hasStarted) return;
+    if(isComplete) return;
+    const current = segments[segIndex] ? segments[segIndex].text : "";
+    if(charIndex === 0 && segIndex === 0) {
+      // initial delay before first char
+      const t = setTimeout(()=> setCharIndex(1), startDelay);
+      return ()=>clearTimeout(t);
+    }
+    if(charIndex < current.length) {
+      const t = setTimeout(()=> setCharIndex(c=>c+1), typingSpeed);
+      return ()=>clearTimeout(t);
+    }
+    // finished current segment
+    if(segIndex < segments.length - 1) {
+      const t = setTimeout(()=> { setSegIndex(s=>s+1); setCharIndex(0); }, typingSpeed);
+      return ()=>clearTimeout(t);
+    }
+    setIsComplete(true);
+  },[hasStarted,segIndex,charIndex,isComplete,segments,typingSpeed,startDelay]);
+
+  useEffect(()=>{
+    if(!repeat || !isComplete) return;
+    const t = setTimeout(()=>{ setSegIndex(0); setCharIndex(0); setIsComplete(false); }, restartDelay);
+    return ()=>clearTimeout(t);
+  },[isComplete,repeat,restartDelay]);
+
+  return (
+    <pre ref={containerRef} className={"font-mono leading-relaxed whitespace-pre-wrap "+className}>
+      {segments.map((s,i)=>{
+        if(i < segIndex) return <span key={i} className={s.className}>{s.text}</span>;
+        if(i === segIndex) return <span key={i} className={s.className}>{s.text.slice(0, Math.max(0,charIndex))}</span>;
+        return <span key={i} className={s.className}></span>;
+      })}
+      <span className="inline-block w-2 h-4 ml-0.5 align-middle bg-primary/80 animate-pulse rounded-sm" />
+    </pre>
+  );
+}
+
+const nav = [
+  { label:"Sobre", href:"#sobre" },{ label:"Plataforma", href:"#plataforma" },
+  { label:"Pipeline", href:"#pipeline" },{ label:"Acessos", href:"#acessos" },
+  { label:"Qualidade", href:"#qualidade" },{ label:"Consumo", href:"#consumo" },
+  { label:"Infraestrutura", href:"#infraestrutura" },{ label:"Integração", href:"#integracao" },
+  { label:"Contato", href:"#contato" },
+];
+
+const features = [
+  { icon:"database", title:"Catálogo de Dados", desc:"Visualize, busque e solicite acesso a conjuntos de dados governamentais com metadados padronizados." },
+  { icon:"workflow", title:"Pipelines de Dados", desc:"Automatize o carregamento contínuo, integre fontes diversas e prepare dados para análise em tempo real." },
+  { icon:"shield-check", title:"Anonimização", desc:"Funções como token-sha256 protegem dados sensíveis sem comprometer o valor analítico." },
+  { icon:"users", title:"Gestão de Usuários", desc:"Perfis Comum, Controlador e Superusuário com permissões finas por conjunto e instituição." },
+  { icon:"key-round", title:"Consumo via API", desc:"Web service REST com autenticação por token, paginação e filtros para integração imediata." },
+  { icon:"bar-chart-3", title:"Power BI Ready", desc:"Conector documentado para PBIRS via Json.Document, possibilitando atualização agendada." },
+];
+
+const ingestionTabs = [
+  { id:"csv", label:"CSV", title:"Ingestão via CSV", desc:"Carga automatizada de arquivos CSV com mapeamento de campos, definição de chave e atualização incremental.", points:["Upload manual ou agendado","Validação de metadados","Suporte a cargas incrementais"] },
+  { id:"sql", label:"SQL", title:"Ingestão via SQL", desc:"Conjuntos criados a partir de consultas SQL com agendamento de execução e testes em tempo real.", points:["Editor com botão TESTAR SQL","Frequência: única, diária, semanal, mensal","Histórico de execuções por conjunto"] },
+  { id:"pipeline", label:"Pipeline", title:"Ingestão via Pipeline", desc:"Scripts Python executados no JupyterHub dedicado, agendados e direcionados a conjuntos da plataforma.", points:["Ambiente JupyterHub isolado","Liberação de acessos por URL/IP","Execução imediata ou agendada"] },
+];
+
+const steps = [
+  { n:"01", title:"Cadastro", desc:"Solicite acesso pela tela de autenticação com 2FA. Aprovação por instituição." },
+  { n:"02", title:"Catálogo", desc:"Explore conjuntos disponíveis e visualize descrição, metadados e responsável." },
+  { n:"03", title:"Solicitação", desc:"Peça acesso justificado. O controlador aprova ou nega via plataforma." },
+  { n:"04", title:"Consumo", desc:"Use o web service com token de acesso ou integre direto ao Power BI." },
+];
+
+const pipelineSteps = [
+  { icon:"file-text", stage:"Etapa 1", title:"Definição do Conjunto", desc:"Cadastro dos atributos gerais: título, descrição, classificação LGPD, nível de privacidade (Privado, Especial, Corporativo, Amplo) e instituição compartilhadora." },
+  { icon:"database", stage:"Etapa 2", title:"Conexão de Dados", desc:"Configuração da origem: SQL (MySQL, PostgreSQL, Oracle), CSV via plataforma ou CSV via FTP. Testes de conexão e definição do tipo de ingestão." },
+  { icon:"code-2", stage:"Etapa 3", title:"Script SQL", desc:"Definição da consulta que extrai os campos e registros desejados. Suporte a comandos SELECT com filtros e joins entre tabelas." },
+  { icon:"bar-chart-3", stage:"Etapa 4", title:"Metadados", desc:"Configuração dos campos: descrição, tipo (texto, número, data), categoria LGPD (Cadastral, Sensível, Dado Comum) e mapeamento de valores." },
+];
+
+const apiDemoSegments = [
+  { text:"// Requisição à API BigData PE\n", className:"text-muted-foreground" },
+  { text:"GET", className:"text-chart-4 font-bold" },
+  { text:" https://www.bigdata.pe.gov.br/api/buscar\n\n", className:"text-muted-foreground" },
+  { text:"Headers:", className:"text-primary font-semibold" },
+  { text:"\n  Authorization: Bearer <token>\n  Content-Type: application/json\n\n", className:"text-muted-foreground" },
+  { text:"// Filtros disponíveis\n", className:"text-muted-foreground" },
+  { text:"?ano=2024&mes=06&orgao=SEFAZ\n\n", className:"text-muted-foreground" },
+  { text:"// Paginação\n", className:"text-muted-foreground" },
+  { text:"Headers:", className:"text-primary font-semibold" },
+  { text:"\n  offset: 0\n  limit: 100\n\n", className:"text-muted-foreground" },
+  { text:"// Resposta JSON\n", className:"text-muted-foreground" },
+  { text:"{\n  ", className:"text-muted-foreground" },
+  { text:'"dados":', className:"text-primary" },
+  { text:" [...],\n  ", className:"text-muted-foreground" },
+  { text:'"total":', className:"text-primary" },
+  { text:" 87542,\n  ", className:"text-muted-foreground" },
+  { text:'"pagina":', className:"text-primary" },
+  { text:" 1,\n  ", className:"text-muted-foreground" },
+  { text:'"por_pagina":', className:"text-primary" },
+  { text:" 100\n}", className:"text-muted-foreground" },
+];
+
+function App(){
+  const [tab,setTab]=useState("csv");
+  const active=ingestionTabs.find(t=>t.id===tab);
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      {/* NAV */}
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border">
+        <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
+          <a href="#" className="flex items-center gap-2">
+            <div className="size-8 rounded-lg bg-cta shadow-glow flex items-center justify-center">
+              <Icon name="database" className="size-4 text-white" />
+            </div>
+            <div className="leading-tight">
+              <div className="font-bold text-sm tracking-wide">BigData PE</div>
+              <div className="text-[10px] text-primary uppercase tracking-widest">ATI-PE</div>
+            </div>
+          </a>
+          <nav className="hidden md:flex items-center gap-8 text-sm">
+            {nav.map(n=>(<a key={n.href} href={n.href} className="text-muted-foreground hover:text-foreground transition-colors">{n.label}</a>))}
+          </nav>
+          <a href="https://www.bigdata.pe.gov.br" target="_blank" rel="noreferrer" className="rounded-full bg-cta px-5 py-2 text-sm font-medium text-white shadow-glow hover:opacity-90 transition">Acessar Portal</a>
+        </div>
+      </header>
+
+      {/* HERO */}
+      <section className="bg-hero relative overflow-hidden pt-32 pb-24">
+        <div className="relative mx-auto max-w-5xl px-6 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-4 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            <span className="size-1.5 rounded-full bg-primary" />
+            Agência Estadual de Tecnologia da Informação
+          </div>
+          <h1 className="mt-8 text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1] text-foreground">
+            Plataforma de <span className="text-primary">Compartilhamento</span><br />e Análise de Dados
+          </h1>
+          <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Estruturando a <strong className="text-foreground">inteligência corporativa</strong> do Estado de Pernambuco através da gestão, padronização e compartilhamento seguro de dados governamentais.
+          </p>
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+            <a href="#plataforma" className="group inline-flex items-center gap-2 rounded-xl bg-cta px-7 py-3.5 font-semibold text-white shadow-glow hover:opacity-90 transition">
+              Conheça a plataforma <Icon name="arrow-right" className="size-4" />
+            </a>
+            <a href="#pipeline" className="rounded-xl border border-border bg-card px-7 py-3.5 font-semibold text-foreground hover:bg-secondary transition">Saiba mais</a>
+          </div>
+          <div className="mt-20 grid grid-cols-3 gap-12 max-w-3xl mx-auto pt-12 border-t border-border">
+            {[{v:"3.000+",l:"Usuários "},{v:"150+",l:"Órgãos Integrados "},{v:"500+",l:"Conjuntos de Dados"}].map(s=>(
+              <div key={s.l} className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-foreground">{s.v}</div>
+                <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground mt-1">{s.l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SOBRE */}
+      <section id="sobre" className="py-24 border-t border-border">
+        <div className="mx-auto max-w-6xl px-6 grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="text-xs uppercase tracking-widest text-primary font-semibold">Sobre o portal</div>
+            <h2 className="mt-3 text-4xl font-bold">Uma fonte única para os<span className="text-gradient"> dados do Estado</span></h2>
+            <p className="mt-5 text-muted-foreground leading-relaxed">O portal <strong className="text-foreground">bigdata.pe.gov.br</strong> centraliza conjuntos de dados de diversas instituições, oferecendo catálogo, governança, ingestão automatizada e APIs para que órgãos e cidadãos possam transformar dados em decisões.</p>
+            <ul className="mt-6 space-y-3">
+              {["Cadastro e catalogação padronizada de metadados","Aprovação e auditoria de acessos por instituição","Anonimização de dados sensíveis (LGPD)","Web service REST com tokens de acesso"].map(i=>(
+                <li key={i} className="flex items-start gap-3 text-sm">
+                  <Icon name="check-circle-2" className="size-5 text-primary" />
+                  <span>{i}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="relative">
+            <div className="absolute inset-0 bg-cta blur-3xl opacity-20 rounded-3xl" />
+            <div className="relative rounded-2xl border border-border bg-card p-6 shadow-card">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="size-3 rounded-full bg-destructive/70" />
+                <div className="size-3 rounded-full" style={{background:'rgba(16,185,129,.7)'}} />
+                <div className="size-3 rounded-full bg-primary/70" />
+                <div className="ml-3 text-xs text-muted-foreground font-mono">bigdata.pe.gov.br/api/buscar</div>
+              </div>
+              <pre className="text-xs font-mono text-muted-foreground overflow-x-auto leading-relaxed"><code>{`GET /api/buscar HTTP/1.1
+Host: www.bigdata.pe.gov.br
+Authorization: <token-do-conjunto>
+Offset: 0
+Limit: 100
+
+→ 200 OK
+[
+  { "id": 1, "municipio": "Recife", ... },
+  { "id": 2, "municipio": "Olinda", ... }
+]`}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PLATAFORMA */}
+      <section id="plataforma" className="py-24 border-t border-border">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center max-w-2xl mx-auto">
+            <div className="text-xs uppercase tracking-widest text-primary font-semibold">Funcionalidades</div>
+            <h2 className="mt-3 text-4xl font-bold">Tudo o que você precisa para<span className="text-gradient"> governar dados</span></h2>
+          </div>
+          <div className="mt-14 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {features.map(f=>(
+              <div key={f.title} className="group relative rounded-2xl border border-border bg-card p-6 shadow-card hover:border-sky-950 transition">
+                <div className="size-11 rounded-2xl bg-secondary flex items-center justify-center transition">
+                  <div className="size-10 rounded-2xl bg-slate-950 flex items-center justify-center">
+                    <Icon name={f.icon} className="size-5 text-white" />
+                  </div>
+                </div>
+                <h3 className="mt-5 font-semibold text-lg">{f.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* INGESTÃO */}
+      <section className="py-24 border-t border-border">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center max-w-2xl mx-auto">
+            <div className="text-xs uppercase tracking-widest text-primary font-semibold">Formas de ingestão</div>
+            <h2 className="mt-3 text-4xl font-bold">Três caminhos para<span className="text-gradient"> seus dados</span></h2>
+          </div>
+          <div className="mt-12 rounded-2xl border border-border bg-card overflow-hidden shadow-card">
+            <div className="flex border-b border-border">
+              {ingestionTabs.map(t=>(
+                <button key={t.id} onClick={()=>setTab(t.id)} className={"flex-1 px-6 py-4 text-sm font-medium transition relative "+(tab===t.id?"text-foreground":"text-muted-foreground hover:text-foreground")}>
+                  {t.label}
+                  {tab===t.id && <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-cta" />}
+                </button>
+              ))}
+            </div>
+            <div key={active.id} className="p-8 md:p-12 grid md:grid-cols-2 gap-8 animate-fade-up">
+              <div>
+                <h3 className="text-2xl font-bold">{active.title}</h3>
+                <p className="mt-3 text-muted-foreground">{active.desc}</p>
+                <ul className="mt-6 space-y-2">
+                  {active.points.map(p=>(<li key={p} className="flex items-center gap-3 text-sm"><div className="size-1.5 rounded-full bg-black" />{p}</li>))}
+                </ul>
+              </div>
+              <div className="rounded-xl bg-background border border-border p-5 font-mono text-xs text-muted-foreground">
+                {active.id==="csv" && (<div className="space-y-2"><div className="text-blue-500"># metadados.csv</div><div>nome,tipo,mapeamentoCampo,chave</div><div>id,NÚMERO,id_registro,true</div><div>municipio,TEXTO,nome_municipio,false</div><div>data,DATA,dt_atualizacao,false</div></div>)}
+                {active.id==="sql" && (<div className="space-y-2"><div className="text-blue-500">-- Consulta 1</div><div>SELECT id, municipio, populacao</div><div>FROM ibge.municipios</div><div>WHERE uf = 'PE'</div><div className="text-chart-2">-- Agendamento: diário 02:00</div></div>)}
+                {active.id==="pipeline" && (<div className="space-y-2"><div className="text-blue-500"># pipeline.py</div><div>import pandas as pd</div><div>df = fetch_api()</div><div>df = transform(df)</div><div>bigdata.send("conjunto_id", df)</div></div>)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* PIPELINE */}
+      <section id="pipeline" className="py-24 border-t border-border">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-4xl font-bold">Pipeline de <span className="text-gradient">Dados</span></h2>
+            <p className="mt-4 text-muted-foreground">O fluxo automatizado que integra, transforma e disponibiliza dados governamentais de forma segura e escalável.</p>
+          </div>
+          <div className="relative">
+            <div className="absolute left-8 top-0 bottom-0 w-px translate-x-5 bg-gradient-to-b from-primary/50 via-primary/20 to-primary/50 md:left-1/2 md:-translate-x-1/2 md:translate-x-0" />
+            <div className="space-y-12">
+              {pipelineSteps.map((step,idx)=>{
+                const isLeft = idx%2===0;
+                return (
+                  <div key={step.stage} className="relative flex items-center">
+                    <div className="absolute left-8 top-1/2 -translate-y-1/2 md:left-1/2 md:-translate-x-1/2 size-10 rounded-full border border-primary/50 bg-card flex items-center justify-center text-sm font-bold text-primary shadow-glow z-10">{idx+1}</div>
+                    <div className={"w-full md:w-5/12 pl-20 md:pl-0 "+(isLeft?"md:mr-auto md:pr-12":"md:ml-auto md:pl-12")}>
+                      <div className="group rounded-2xl border border-border border-l-2 bg-card p-6 shadow-card hover:border-primary/50 transition" style={{borderLeftColor:'rgba(2,132,199,.5)'}}>
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="size-11 rounded-xl bg-secondary flex items-center justify-center group-hover:bg-cta transition">
+                            <Icon name={step.icon} className="size-5 text-primary group-hover:text-white transition" />
+                          </div>
+                          <span className="text-xs uppercase tracking-widest text-primary font-semibold">{step.stage}</span>
+                        </div>
+                        <h3 className="text-lg font-semibold">{step.title}</h3>
+                        <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ACESSOS */}
+      <section id="acessos" className="py-24 border-t border-border">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <h2 className="text-4xl md:text-5xl font-bold">Gestão de <span className="text-gradient">Acessos</span></h2>
+            <p className="mt-4 text-muted-foreground">Hierarquia de permissões que garante segurança e controle no acesso aos dados governamentais.</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-5">
+            {[
+              { badge:"Interessado", badgeIcon:"eye", badgeColor:"text-amber-700 border-amber-400/40 bg-amber-50", title:"Usuário Interessado", desc:"Acesso inicial ao catálogo de dados. Realiza pedidos de acesso via SEI. Pode visualizar conjuntos públicos e acompanhar solicitações.", items:["Visualizar catálogo de dados","Solicitar acesso via SEI","Acompanhar pedidos","Login com credenciais SEI"] },
+              { badge:"Controlador", badgeIcon:"shield-check", badgeColor:"text-emerald-700 border-emerald-400/40 bg-emerald-50", title:"Usuário Controlador", desc:"Gerencia conjuntos de dados de sua instituição. Autoriza pedidos de acesso, configura metadados e monitora estatísticas.", items:["Criar e editar conjuntos","Gerenciar pedidos de acesso","Configurar metadados LGPD","Visualizar estatísticas"] },
+              { badge:"Superusuário", badgeIcon:"star", badgeColor:"text-blue-700 border-blue-400/40 bg-blue-50", title:"Superusuário", desc:"Administrador mestre do sistema. Acesso total a configurações, gestão de usuários, pipelines e anonimização de dados.", items:["Gestão completa de usuários","Configurações internas","Acesso a pipelines","Anonimização de dados"] },
+            ].map(role=>(
+              <div key={role.title} className="relative rounded-2xl border border-border bg-card p-6 shadow-card hover:border-primary/50 transition">
+                <div className={"inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium "+role.badgeColor}>
+                  <Icon name={role.badgeIcon} className="size-3" />{role.badge}
+                </div>
+                <h3 className="mt-5 text-xl font-bold">{role.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{role.desc}</p>
+                <ul className="mt-5 space-y-2.5">
+                  {role.items.map(i=>(<li key={i} className="flex items-center gap-2.5 text-sm"><Icon name="users" className="size-3.5 text-primary" /><span className="text-muted-foreground">{i}</span></li>))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-8 rounded-2xl border border-border bg-card/60 p-6 md:p-8">
+            <div className="flex items-center gap-3 mb-5">
+              <Icon name="lock" className="size-5 text-primary" />
+              <h3 className="font-semibold">Fluxo de Aprovação de Acesso</h3>
+            </div>
+            <div className="grid md:grid-cols-3 gap-4">
+              {[
+                { icon:"eye", title:"Pedido de Acesso", desc:"Usuário interessado solicita acesso a um conjunto de dados via portal." },
+                { icon:"shield-check", title:"Análise do Controlador", desc:"Controlador avalia a justificativa e aprova ou nega o pedido de acesso." },
+                { icon:"key-round", title:"Liberação do Token", desc:"Após aprovação, o token de acesso é gerado e disponibilizado ao usuário.", highlight:true },
+              ].map(s=>(
+                <div key={s.title} className={"rounded-xl border bg-background/60 p-5 "+(s.highlight?"border-chart-4/40":"border-border")}>
+                  <div className="flex items-center gap-2.5 mb-2">
+                    <Icon name={s.icon} className={"size-4 "+(s.highlight?"text-chart-4":"text-primary")} />
+                    <div className="font-semibold text-sm">{s.title}</div>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* QUALIDADE */}
+      <section id="qualidade" className="py-24 border-t border-border">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <h2 className="text-4xl md:text-5xl font-bold">Qualidade dos <span className="text-gradient">Dados</span></h2>
+            <p className="mt-4 text-muted-foreground">Arquitetura de medalhões para classificação da qualidade dos conjuntos de dados, garantindo confiabilidade em cada nível.</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-5">
+            {[
+              { badge:"Bronze", badgeColor:"text-[#cd7f32] border-[#cd7f32]/40 bg-[#cd7f32]/10", icon:"database", iconColor:"text-[#cd7f32]", title:"Dados Brutos", desc:"Dados crus e históricos recebidos diretamente das fontes. Sem auditoria ou tratamento. Útil para reprocessamento e análise exploratória.", items:["Ingestão direta das fontes","Dados sem tratamento","Armazenamento histórico","Reprocessamento possível"] },
+              { badge:"Prata", badgeColor:"text-slate-500 border-slate-300 bg-slate-100", icon:"file-check-2", iconColor:"text-slate-500", title:"Dados Tratados", desc:"Dados limpos, normalizados e integrados. Padronização de formatos, correção de inconsistências e deduplicação. Prontos para análises e dashboards.", items:["Limpeza e normalização","Correção de inconsistências","Deduplicação de registros","Pronto para dashboards"] },
+              { badge:"Ouro", badgeColor:"text-[#D4AF37] border-[#D4AF37]/30 bg-[#D4AF37]/10", icon:"award", iconColor:"text-[#D4AF37]", title:"Dados Refinados", desc:"Dados certificados, modelados e com garantia de qualidade. Agregações calculadas, regras de negócio aplicadas. Ideais para decisões estratégicas e relatórios executivos.", items:["Certificação de qualidade","Regras de negócio aplicadas","Agregações calculadas","Decisões estratégicas"] },
+            ].map(m=>(
+              <div key={m.title} className="relative rounded-2xl border border-border bg-card p-6 shadow-card hover:border-primary/50 transition">
+                <div className={"inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium "+m.badgeColor}>{m.badge}</div>
+                <div className="mt-5 size-12 rounded-xl bg-secondary flex items-center justify-center">
+                  <Icon name={m.icon} className={"size-6 "+m.iconColor} />
+                </div>
+                <h3 className="mt-5 text-xl font-bold">{m.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{m.desc}</p>
+                <ul className="mt-5 space-y-2">
+                  {m.items.map(i=>(<li key={i} className="flex items-center gap-2 text-sm text-muted-foreground"><Icon name="sparkles" className={"size-3 "+m.iconColor} />{i}</li>))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <div className="mt-14 flex items-end justify-center gap-3 md:gap-6 flex-wrap">
+            {[
+              { icon:"database", label:"Fonte", color:"text-primary" },
+              { letter:"B", label:"Bronze", color:"text-[#cd7f32]" },
+              { letter:"S", label:"Prata", color:"text-slate-500" },
+              { letter:"G", label:"Ouro", color:"text-[#D4AF37]" },
+              { icon:"bar-chart-3", label:"BI", color:"text-primary" },
+            ].map((node,idx,arr)=>(
+              <div key={node.label} className="flex items-end gap-3 md:gap-6">
+                <div className="flex flex-col items-center gap-2">
+                  <div className={"size-14 rounded-xl border border-border bg-card flex items-center justify-center font-bold "+node.color}>
+                    {node.icon ? <Icon name={node.icon} className="size-6" /> : node.letter}
+                  </div>
+                  <div className="text-xs text-muted-foreground">{node.label}</div>
+                </div>
+                {idx < arr.length-1 && <Icon name="arrow-right" className="size-5 text-muted-foreground mb-7" />}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+
+      {/* CONSUMO */}
+      <section id="consumo" className="py-24 border-t border-border">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <h2 className="text-4xl md:text-5xl font-bold">Consumo de <span className="text-gradient">Dados</span></h2>
+            <p className="mt-4 text-muted-foreground">API RESTful para consumo seguro dos dados governamentais via tokens de acesso.</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-5">
+            <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-card">
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-background/40">
+                <div className="size-3 rounded-full bg-destructive/70" />
+                <div className="size-3 rounded-full" style={{background:'rgba(16,185,129,.7)'}} />
+                <div className="size-3 rounded-full bg-primary/70" />
+                <div className="ml-3 text-xs text-muted-foreground font-mono">api-demo.sh</div>
+              </div>
+              <div className="p-5 text-xs overflow-x-auto">
+                <TypewriterCode segments={apiDemoSegments} typingSpeed={8} startDelay={500} repeat restartDelay={5000} className="text-muted-foreground" />
+              </div>
+              <div className="h-1 bg-cta" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { icon:"key-round", title:"Token de Acesso", desc:"Cada usuário recebe um token único após aprovação do controlador, garantindo segurança no consumo dos dados." },
+                { icon:"filter", title:"Filtros Avançados", desc:"Filtre dados por campos específicos diretamente na URL da requisição usando parâmetros query string." },
+                { icon:"layers", title:"Paginação", desc:"Controle o volume de dados retornados com os parâmetros offset e limit no cabeçalho da requisição." },
+                { icon:"globe", title:"Múltiplos Formatos", desc:"Consuma dados em JSON ou CSV. Integração com Power BI, Pentaho, Qlik e outras ferramentas de BI." },
+              ].map(f=>(
+                <div key={f.title} className="rounded-2xl border border-border bg-card p-5 shadow-card hover:border-primary/40 transition">
+                  <div className="size-10 rounded-xl bg-secondary flex items-center justify-center"><Icon name={f.icon} className="size-5 text-primary" /></div>
+                  <div className="mt-4 font-semibold text-sm">{f.title}</div>
+                  <p className="mt-2 text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="mt-8 rounded-2xl border border-border bg-card/60 p-6 md:p-8">
+            <div className="flex items-center gap-3 mb-5"><Icon name="zap" className="size-5 text-primary" /><h3 className="font-semibold">Endpoints Principais</h3></div>
+            <div className="space-y-3">
+              {[
+                { method:"GET", path:"/api/buscar", desc:"Consulta dados do conjunto com filtros", color:"bg-primary/15 text-primary" },
+                { method:"GET", path:"/api/info", desc:"Retorna metadados do conjunto", color:"bg-primary/15 text-primary" },
+                { method:"POST", path:"/api/paginar", desc:"Consulta com paginação (offset/limit)", color:"bg-chart-4/15 text-chart-4" },
+              ].map(e=>(
+                <div key={e.path} className="flex items-center gap-4 rounded-xl border border-border bg-background/40 px-4 py-3">
+                  <span className={"rounded-md px-2.5 py-1 text-xs font-bold font-mono "+e.color}>{e.method}</span>
+                  <code className="text-sm font-mono text-foreground">{e.path}</code>
+                  <span className="ml-auto text-xs text-muted-foreground">{e.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* INFRAESTRUTURA */}
+      <section id="infraestrutura" className="py-24 border-t border-border">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <h2 className="text-4xl md:text-5xl font-bold">Infraestrutura <span className="text-gradient">Tecnológica</span></h2>
+            <p className="mt-4 text-muted-foreground">Stack tecnológica robusta que garante escalabilidade, segurança e alta disponibilidade.</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            {[
+              { icon:"hard-drive", value:"2.4 PB", label:"Armazenamento Hadoop", barColor:"bg-blue-500", pct:65 },
+              { icon:"database", value:"487", label:"Coleções MongoDB", barColor:"bg-blue-500", pct:45 },
+              { icon:"activity", value:"12.5K", label:"Ingestões/Dia", barColor:"bg-emerald-500", pct:80 },
+              { icon:"server", value:"99.97%", label:"Uptime", barColor:"bg-blue-500", pct:99 },
+            ].map(stat=>(
+              <div key={stat.label} className="rounded-2xl border border-border bg-card p-5 shadow-card">
+                <div className="flex items-start justify-between">
+                  <Icon name={stat.icon} className="size-5 text-primary" />
+                  <div className="text-2xl md:text-3xl font-bold">{stat.value}</div>
+                </div>
+                <div className="mt-3 text-xs text-muted-foreground">{stat.label}</div>
+                <div className="mt-3 h-1.5 rounded-full bg-secondary overflow-hidden">
+                  <div className={"h-full "+stat.barColor+" rounded-full"} style={{width: stat.pct+"%"}} />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="grid md:grid-cols-3 gap-5">
+            {[
+              { icon:"cloud", title:"Apache Hadoop", desc:"Sistema de arquivos distribuído HDFS para armazenamento de grandes volumes de dados. Processamento paralelo com MapReduce." },
+              { icon:"database", title:"MongoDB", desc:"Banco de dados NoSQL para armazenamento flexível de dados semiestruturados. Alto desempenho em consultas." },
+              { icon:"server", title:"Camada de Serviço", desc:"API REST que intermedia o acesso aos dados. Autenticação por tokens, filtros dinâmicos e paginação inteligente." },
+            ].map(t=>(
+              <div key={t.title} className="rounded-2xl border border-border bg-card p-6 shadow-card hover:border-primary/50 transition">
+                <div className="size-11 rounded-xl bg-secondary flex items-center justify-center"><Icon name={t.icon} className="size-5 text-primary" /></div>
+                <h3 className="mt-5 font-semibold text-lg">{t.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{t.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* INTEGRAÇÃO */}
+      <section id="integracao" className="py-24 border-t border-border">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <div className="text-xs uppercase tracking-widest text-primary font-semibold">Integração</div>
+            <h2 className="mt-3 text-4xl font-bold">Conecte ao <span className="text-gradient">Power BI</span> em 4 passos</h2>
+          </div>
+          <div className="grid md:grid-cols-4 gap-4">
+            {steps.map(s=>(
+              <div key={s.n} className="rounded-2xl border border-border bg-card p-6 shadow-card relative overflow-hidden">
+                <div className="text-6xl font-bold text-gradient opacity-30 absolute -top-2 right-3">{s.n}</div>
+                <div className="relative">
+                  <div className="font-semibold text-lg">{s.title}</div>
+                  <div className="mt-2 text-sm text-muted-foreground leading-relaxed">{s.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-10 rounded-2xl border border-primary/30 bg-card/60 backdrop-blur p-6 md:p-8 shadow-glow">
+            <div className="flex items-start gap-4">
+              <div className="size-10 rounded-xl bg-cta flex items-center justify-center shrink-0"><Icon name="git-branch" className="size-5 text-white" /></div>
+              <div>
+                <div className="font-semibold">Dica para PBIRS</div>
+                <p className="mt-2 text-sm text-muted-foreground">Após obter dados da Web, substitua <code className="text-primary bg-background px-1.5 py-0.5 rounded">Web.Page</code> por <code className="text-primary bg-background px-1.5 py-0.5 rounded">Json.Document</code> no editor de consultas para habilitar a atualização agendada.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SEGURANÇA */}
+      <section className="py-24 border-t border-border">
+        <div className="mx-auto max-w-4xl px-6 text-center">
+          <div className="flex justify-center"><Icon name="lock" className="size-10 text-primary" /></div>
+          <h2 className="mt-6 text-4xl font-bold">Segurança e <span className="text-gradient">conformidade</span></h2>
+          <p className="mt-5 text-muted-foreground">Autenticação de dois fatores, controle de acesso por perfil e instituição, anonimização de campos sensíveis e auditoria completa de operações. Conformidade com a LGPD em cada etapa.</p>
+        </div>
+      </section>
+
+      {/* CONTATO */}
+      <section id="contato" className="py-24 border-t border-border">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="relative rounded-3xl border border-primary/30 bg-card p-10 md:p-16 overflow-hidden shadow-glow">
+            <div className="absolute -top-32 -right-32 size-96 rounded-full blur-3xl opacity-30" style={{background:'var(--gradient-cta)'}} />
+            <div className="relative grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h2 className="text-4xl font-bold">Pronto para começar?</h2>
+                <p className="mt-4 text-muted-foreground">Solicite acesso ao portal e comece a explorar os conjuntos de dados do Governo de Pernambuco.</p>
+              </div>
+              <div className="flex flex-col gap-3">
+                <a href="https://www.bigdata.pe.gov.br" target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full bg-cta px-6 py-3 font-medium text-white shadow-glow hover:opacity-90 transition">Acessar bigdata.pe.gov.br <Icon name="arrow-right" className="size-4" /></a>
+                <a href="mailto:gda@ati.pe.gov.br" className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-6 py-3 font-medium hover:bg-secondary transition"><Icon name="mail" className="size-4" />Fale com a GDA</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="border-t border-border py-10">
+        <div className="mx-auto max-w-6xl px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-3"><Icon name="building-2" className="size-4" /><span>ATI-PE · Gerência de Governança de Dados</span></div>
+          <div>© {new Date().getFullYear()} Governo do Estado de Pernambuco</div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+</script>
+<script>
+  // Renderiza o App principal dentro do elemento #root.
+  const rawJSX = document.getElementById('app-jsx').textContent;
+  const transformed = Babel.transform(rawJSX, {
+    presets: [['react', { runtime: 'classic' }]]
+  }).code;
+  const script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.text = transformed;
+  document.body.appendChild(script);
+</script>
+</body>
+</html>
